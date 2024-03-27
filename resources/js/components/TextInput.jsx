@@ -10,6 +10,11 @@ export default forwardRef(function TextInput({ type = 'text', className = '', is
     }, []);
 
     return (
+        <>
+       
+   
+     
+   
         <input
             {...props}
             type={type}
@@ -19,5 +24,6 @@ export default forwardRef(function TextInput({ type = 'text', className = '', is
             }
             ref={input}
         />
+        </>
     );
 });

@@ -4,6 +4,8 @@ import InputError from '@/components/InputError';
 import InputLabel from '@/components/InputLabel';
 import PrimaryButton from '@/components/PrimaryButton';
 import TextInput from '@/components/TextInput';
+import Heading from '@/components/Heading';
+import ApplicationLogo from '@/components/ApplicationLogo';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Register() {
@@ -28,8 +30,14 @@ export default function Register() {
 
     return (
         <GuestLayout>
+            <div className="flex  gap-4 sm:max-w-md lg:max-w-2xl mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+               
+           <div className='lg:w-80 md:w-80'>
             <Head title="Register" />
-
+           
+            <Heading title="Sign Up" />
+ 
+                
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
@@ -110,8 +118,21 @@ export default function Register() {
                     <PrimaryButton className="ms-4" disabled={processing}>
                         Register
                     </PrimaryButton>
+                    
                 </div>
             </form>
+            </div>
+            <div className='flex flex-col sm:justify-center items-center'>
+           
+            <img
+        className="hidden lg:block md:block w-45 h-50 fill-current text-gray-500 drop-shadow-md hover:drop-shadow-xl"
+        src="register.png" alt="Your Image Alt Text"
+      />
+     
+             </div>
+            </div>
+          
+           
         </GuestLayout>
     );
 }
