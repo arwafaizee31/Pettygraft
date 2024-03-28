@@ -30,9 +30,9 @@ export default function Register() {
 
     return (
         <GuestLayout>
-            <div className="flex  gap-4 sm:max-w-md lg:max-w-2xl mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <div class="flex gap-4 sm:max-w-md lg:max-w-2xl mt-6 p-8 bg-white shadow-md overflow-hidden sm:rounded-lg">
                
-           <div className='lg:w-80 md:w-80'>
+           <div class='lg:w-80 md:w-80'>
             <Head title="Register" />
            
             <Heading title="Sign Up" />
@@ -40,11 +40,12 @@ export default function Register() {
                 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                   
 
                     <TextInput
                         id="name"
                         name="name"
+                        placeholder="Your Name"
                         value={data.name}
                         className="mt-1 block w-full"
                         autoComplete="name"
@@ -57,12 +58,13 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
+                   
 
                     <TextInput
                         id="email"
                         type="email"
                         name="email"
+                        placeholder="Your Email"
                         value={data.email}
                         className="mt-1 block w-full"
                         autoComplete="username"
@@ -74,12 +76,13 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    
 
                     <TextInput
                         id="password"
                         type="password"
                         name="password"
+                        placeholder="Password"
                         value={data.password}
                         className="mt-1 block w-full"
                         autoComplete="new-password"
@@ -91,12 +94,13 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
+                   
 
                     <TextInput
                         id="password_confirmation"
                         type="password"
                         name="password_confirmation"
+                        placeholder="Confirm Password"
                         value={data.password_confirmation}
                         className="mt-1 block w-full"
                         autoComplete="new-password"
@@ -106,16 +110,28 @@ export default function Register() {
 
                     <InputError message={errors.password_confirmation} className="mt-2" />
                 </div>
+                <div className="mt-4">
+                   
 
-                <div className="flex items-center justify-end mt-4">
-                    <Link
-                        href={route('login')}
-                        className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Already registered?
-                    </Link>
+                   <TextInput
+                       id="password_confirmation"
+                       type="password"
+                       name="password_confirmation"
+                       placeholder="Confirm Password"
+                       value={data.password_confirmation}
+                       className="mt-1 block w-full"
+                       autoComplete="new-password"
+                       onChange={(e) => setData('password_confirmation', e.target.value)}
+                       required
+                   />
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                   <InputError message={errors.password_confirmation} className="mt-2" />
+               </div>
+               
+                <div className="flex  justify-start mt-4">
+                   
+
+                    <PrimaryButton disabled={processing}>
                         Register
                     </PrimaryButton>
                     
@@ -128,7 +144,12 @@ export default function Register() {
         className="hidden lg:block md:block w-45 h-50 fill-current text-gray-500 drop-shadow-md hover:drop-shadow-xl"
         src="register.png" alt="Your Image Alt Text"
       />
-     
+      <Link
+                        href={route('login')}
+                        className="hidden lg:block md:block underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 pt-6 py-6"
+                    >
+                        Already a member?
+                    </Link>
              </div>
             </div>
           
