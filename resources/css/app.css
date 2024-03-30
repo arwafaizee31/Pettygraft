@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Adjust the scrollbar width and height */
+::-webkit-scrollbar {
+    width: 0px !important;
+    height: 1px;
+    position: absolute;
+    left: 0;
+}
+.custom-textInput {
+    border: none !important;
+    border-bottom: 1px solid #ccc !important; /* Set the default bottom border color */
+    
+}
+
+/* Style the bottom border to change color when focused */
+.custom-textInput:focus {
+    outline: none !important; /* Remove the default focus outline */
+    border-bottom-color: black !important; /* Set the bottom border color to black when focused */
+}
+
+
+
+
