@@ -5,7 +5,7 @@ export default forwardRef(function TextInput({ type = 'text', className = '', is
 
     useEffect(() => {
         if (isFocused) {
-            input.current.focus();
+            
         }
     }, []);
 

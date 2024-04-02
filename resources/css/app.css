@@ -10,17 +10,23 @@
     left: 0;
 }
 .custom-textInput {
+  
     border: none !important;
     border-bottom: 1px solid #ccc !important; /* Set the default bottom border color */
     
 }
 
 /* Style the bottom border to change color when focused */
-.custom-textInput:focus {
-    outline: none !important; /* Remove the default focus outline */
-    border-bottom-color: black !important; /* Set the bottom border color to black when focused */
+
+.css-1nmdiq5-menu {
+    position: relative !important;
+   
+    z-index: 1000 !important;
 }
-
-
+.css-1jrqmau-menu {
+    position: relative !important;
+   
+    z-index: 1000 !important;
+}
 
 

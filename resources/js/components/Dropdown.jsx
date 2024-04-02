@@ -22,9 +22,7 @@ const Trigger = ({ children }) => {
     const { open, setOpen, toggleOpen } = useContext(DropDownContext);
     const handleTriggerClick = (e) => {
         e.stopPropagation(); // Stop event propagation to prevent form submission
-        console.log('Trigger clicked');
-        console.log('Target:', e.target);
-        console.log('Current Target:', e.currentTarget);
+       
         toggleOpen();
     };
     return (
