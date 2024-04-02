@@ -20,10 +20,14 @@ const Dropdown = ({ children }) => {
 
 const Trigger = ({ children }) => {
     const { open, setOpen, toggleOpen } = useContext(DropDownContext);
-
+    const handleTriggerClick = (e) => {
+        e.stopPropagation(); // Stop event propagation to prevent form submission
+       
+        toggleOpen();
+    };
     return (
         <>
-            <div onClick={toggleOpen}>{children}</div>
+           <div onClick={handleTriggerClick}>{children}</div>
 
             {open && <div className="fixed inset-0 z-40" onClick={() => setOpen(false)}></div>}
         </>
