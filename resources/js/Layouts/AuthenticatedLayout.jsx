@@ -11,12 +11,11 @@ export default function Authenticated({ user, header, children }) {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <nav className="">
+            <nav className="relative h-12 sm:h-20 bg-primary">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-20">
-                      
+                    <div className="flex justify-between sm:justify-center h-12 sm:h-20">
                         <div className="flex">
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
@@ -24,7 +23,7 @@ export default function Authenticated({ user, header, children }) {
                                     HOME
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
@@ -32,7 +31,7 @@ export default function Authenticated({ user, header, children }) {
                                     MY PETS
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
@@ -40,17 +39,16 @@ export default function Authenticated({ user, header, children }) {
                                     ALL PETS
                                 </NavLink>
                             </div>
-                            </div>
-                            <div className="flex">
-                            <div className="shrink-0 flex items-center">
+                        </div>
+                        <div className="flex">
+                            <div className="shrink-0 flex sm:items-center">
                                 <Link href="/">
-                                    <ApplicationLogo className="block h-20 w-auto fill-current text-gray-800" />
+                                    <ApplicationLogo className="block h-12 sm:h-20 w-auto fill-current text-gray-800" />
                                 </Link>
                             </div>
-                         
                         </div>
-                            <div className="flex">
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <div className="flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
@@ -58,7 +56,7 @@ export default function Authenticated({ user, header, children }) {
                                     PREMIUM
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
@@ -66,89 +64,17 @@ export default function Authenticated({ user, header, children }) {
                                     ABOUT
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                    <Dropdown>
-                                    <Dropdown.Trigger>
-                                    
-                                        <span className="inline-flex rounded-md">
-                                              PROFILE
-                                                {user.name}
-                                                {/* <svg
-                                                    className="ms-2 -me-0.5 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg> */}
-                                        </span>
-                                    </Dropdown.Trigger>
-
-                                    <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route("profile.edit")}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route("logout")}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
+                            <div className="hidden space-x-8 sm:-my-px  sm:flex">
+                                <NavLink
+                                   href={route("profile.edit")}
+                                    active={route().current("profile.edit")}
+                                >
+                                    PROFILE
+                                </NavLink>
                             </div>
-                            </div>
-                        <div className="hidden sm:flex sm:items-center sm:ms-6">
-                            <div className="ms-3 relative">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="ms-2 -me-0.5 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
-
-                                    <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route("profile.edit")}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route("logout")}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
-                            </div>
+                         
                         </div>
+                   
 
                         <div className="-me-2 flex items-center sm:hidden">
                             <button
@@ -211,10 +137,10 @@ export default function Authenticated({ user, header, children }) {
                     <div className="pt-4 pb-1 border-t border-gray-200">
                         <div className="px-4">
                             <div className="font-medium text-base text-gray-800">
-                                {user.name}
+                                username
                             </div>
                             <div className="font-medium text-sm text-gray-500">
-                                {user.email}
+                                useremail
                             </div>
                         </div>
 
