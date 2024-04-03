@@ -4,6 +4,7 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/components/InputError';
 import InputLabel from '@/components/InputLabel';
 import PrimaryButton from '@/components/PrimaryButton';
+import Checkbox from "@/components/Checkbox";
 import TextInput from '@/components/TextInput';
 import Heading from '@/components/Heading';
 import LocationSelector from '@/components/LocationSelector';
@@ -18,6 +19,7 @@ import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { Country, State, City } from 'country-state-city';
 
+
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
         fname: '',
@@ -30,19 +32,35 @@ export default function Register() {
         country: '',
         state: '',
         city: '',
+        terms_and_conditions: false,
+        roles: [],
     });
+    const [roles, setRoles] = useState([]);
     const [countryOptions, setCountryOptions] = useState([]);
     const [stateOptions, setStateOptions] = useState([]);
     const [cityOptions, setCityOptions] = useState([]);
     const [selectedCountry, setSelectedCountry] = useState('');
     const [selectedState, setSelectedState] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
-    const [selectedCountryCode, setSelectedCountryCode] = useState('');
-    
+    const [selectedCountryName, setSelectedCountryName] = useState('');
+    const [selectedStateName, setSelectedStateName] = useState('');
+    const [selectedCityName, setSelectedCityName] = useState('');
+   
+    useEffect(() => {
+        // Fetch roles data from your API endpoint
+        fetch('/api/roles') 
+            .then(response => response.json())
+            .then(data => {
+                setRoles(data); // Set roles data in state
+            })
+            .catch(error => {
+                console.error('Error fetching roles:', error);
+            });
+    }, []);
     useEffect(() => {
         return () => {
             reset('password', 'password_confirmation');
-        };
+        };  
     }, []);
     
     useEffect(() => {
@@ -58,7 +76,8 @@ export default function Register() {
                 value: country.isoCode
             }));
             setCountryOptions(options);
-            setSelectedCountry(options[0].value); // Select the first country by default
+            setSelectedCountry(options[0].value); 
+            setSelectedCountryName(options[0].label);// Select the first country by default
         } catch (error) {
             console.error('Error fetching countries:', error);
         }
@@ -82,6 +101,7 @@ export default function Register() {
             
             if (options.length > 0) {
                 setSelectedState(options[0].value);
+                setSelectedStateName(options[0].label);
                 // Log fetched cities // Select the first state by default if options are available
             } else {
                 setSelectedState(null); // Clear selected state if no options are available
@@ -111,7 +131,7 @@ export default function Register() {
                
                 if (options.length > 0) {
                     setSelectedCity(options[0].value);
-                   
+                    setSelectedCityName(options[0].label);
                 } else {
                     setSelectedCity(null); // Clear selected state if no options are available
                 }
@@ -120,14 +140,11 @@ export default function Register() {
             console.error('Error fetching cities:', error);
         }
     };
-    const handleCountrySelect = (selectedOption) => {
-        
-        setSelectedCountryCode(selectedOption.code); // Assuming the country code is available in the selectedOption
-    };
+  
 
     const submit = (e) => {
         e.preventDefault();
-        
+        const roleIdsString = data.roles.join(',');
   
         const formData = {
             fname: data.fname,
@@ -135,13 +152,14 @@ export default function Register() {
             email: data.email,
             password: data.password,
             password_confirmation: data.password_confirmation,
-            country_code: selectedCountryCode, 
+            country_code: data.country_code, 
             phone_no: data.phone_no,
-            country: selectedCountry, // Include selected country value
-            state: selectedState, // Include selected state value
-            city: selectedCity, // Include selected city value
-        };
-        console.log(formData);
+            country: data.country, // Include selected country value
+            state: data.state, // Include selected state value
+            city: data.city, // Include selected city value
+            roles: roleIdsString,
+        };  
+      console.log(formData);
         post(route('register'));
     };
 
@@ -285,7 +303,8 @@ export default function Register() {
                 className="mt-1 block w-full"
                 autoComplete="phone_no"
                 onChange={(e) => setData('phone_no', e.target.value)}
-                onSelectCountryCode={setSelectedCountryCode}
+               setData={setData}
+               
                 required
             />
 
@@ -294,9 +313,12 @@ export default function Register() {
                <div className="mt-4">
                <LocationSelector
                                 options={countryOptions}
-                                onSelect={(selectedOption) => setSelectedCountry(selectedOption.value)}
+                                onSelect={(selectedOption) => {
+                                    setSelectedCountry(selectedOption.value);
+                                    setData('country', selectedOption.value); // Update country value
+                                }}
                                 placeholder="Select Country"
-                                value={selectedCountry}
+                                value="{{ $formData['country'] ?? '' }}"
                                 name="country"
                             />
                             <InputError message={errors.country} className="mt-2" />
@@ -304,20 +326,83 @@ export default function Register() {
                             <div className="mt-4">
                             <LocationSelector
                                 options={stateOptions}
-                                onSelect={(selectedOption) => setSelectedState(selectedOption.value)}
+                                onSelect={(selectedOption) => {
+                                    setSelectedState(selectedOption.value);
+                                    setData('state', selectedOption.value); // Update country value
+                                }}
                                 placeholder="Select State"
-                                value={selectedState}
+                                value="{{ $formData['state'] ?? '' }}"
+                                name="state"
                             />
                             <InputError message={errors.state} className="mt-2" />
                                 </div>
                                 <div className="mt-4">
                                 <LocationSelector
                                 options={cityOptions}
-                                onSelect={(selectedOption) => setSelectedCity(selectedOption.value)}
+                                onSelect={(selectedOption) => {
+                                    setSelectedCity(selectedOption.value);
+                                    setData('city', selectedOption.value); // Update country value
+                                }}
                                 placeholder="Select City"
-                                value={selectedCity}
+                                value="{{ $formData['city'] ?? '' }}"
+                                name="city"
+                             
                             />
                             <InputError message={errors.city} className="mt-2" />
+                                </div>
+                                
+                                <div className="mt-4">
+                                <label className=''>
+                Register as a: 
+            </label>
+            {roles.map(role => (
+                <label key={role.id} className="flex items-center mt-2">
+                    <Checkbox
+                        name="roles[]"
+                        checked={data.roles.includes(role.id)} // Check if role id is included in data.roles array
+                        onChange={(e) => {
+                            const isChecked = e.target.checked;
+                            if (isChecked) {
+                                setData(prevData => ({
+                                    ...prevData,
+                                    roles: [...prevData.roles, role.id] // Add role id to data.roles array
+                                }));
+                            } else {
+                                setData(prevData => ({
+                                    ...prevData,
+                                    roles: prevData.roles.filter(roleId => roleId !== role.id) // Remove role id from data.roles array
+                                }));
+                            }
+                        }}
+                    />
+                    <span className="ml-2 text-sm text-gray-600">{role.display_name}</span> {/* Display role name */}
+                </label>
+            ))}
+              <InputError message={errors.roles} className="mt-2" />
+                                </div>
+                                <hr className='mt-4'/>
+                                <div className="mt-4">
+                                <label className="flex items-center">
+                                    <Checkbox
+                                        name="terms_and_conditions"
+                                        checked={data.terms_and_conditions}
+                                        onChange={(e) =>
+                                            setData(
+                                                "terms_and_conditions",
+                                                e.target.checked
+                                            )
+                                        }
+                                    />
+                                    <span className="ms-2 text-sm text-gray-600">
+                                        I agree all statements in&nbsp;
+                                        <Link
+                       
+                        className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      terms of service 
+                    </Link>
+                                    </span>
+                                </label>
                                 </div>
             </div>
                 <div className="flex  gap-3 justify-start mt-4">
@@ -328,7 +413,7 @@ export default function Register() {
                     >
                         Already a member?
                     </Link>
-                    <PrimaryButton disabled ={processing}>
+                    <PrimaryButton disabled={!data.terms_and_conditions || processing}>
                         Register
                     </PrimaryButton>
                    
