@@ -31,8 +31,8 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+     
       
-       
 
         $request->validate([
             'fname' => 'required|string|max:255',
@@ -42,10 +42,12 @@ class RegisteredUserController extends Controller
             'country_code' => 'nullable|string|max:255',
             'phone_no' => 'required|string|max:255',
             'country' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'roles' => 'required|array'
          ]);
-
+       
+         
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
@@ -56,12 +58,13 @@ class RegisteredUserController extends Controller
             'country' => $request->country,
             'state' => $request->state,
             'city' => $request->city,
+            
              ]);
-
-        event(new Registered($user));
+             $user->roles()->attach($request->roles);
+        event(new Registered($user));   
 
         Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+        $user->sendEmailVerificationNotification();
+        return redirect()->route('verification.notice');
     }
 }

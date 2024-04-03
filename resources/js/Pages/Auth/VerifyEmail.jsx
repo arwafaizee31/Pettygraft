@@ -13,6 +13,7 @@ export default function VerifyEmail({ status }) {
 
     return (
         <GuestLayout>
+             <div class="sm:max-w-md lg:max-w-2xl mt-6 p-8 bg-white shadow-md overflow-hidden sm:rounded-lg">
             <Head title="Email Verification" />
 
             <div className="mb-4 text-sm text-gray-600">
@@ -40,6 +41,7 @@ export default function VerifyEmail({ status }) {
                     </Link>
                 </div>
             </form>
+            </div>
         </GuestLayout>
     );
 }

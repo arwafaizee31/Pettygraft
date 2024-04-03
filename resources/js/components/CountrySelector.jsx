@@ -19,15 +19,17 @@ const countryOptions = Object.keys(countryData.countries).map((code) => ({
 
 // Set default country to India
 const defaultCountry = countryOptions.find((option) => option.value === 'IN');
-
-export function CountrySelector({ onSelect }) {
+export default defaultCountry;
+export function CountrySelector({ onSelect}) 
+{
+    
     const [selectedCountryCode, setSelectedCountryCode] = useState(defaultCountry); // Set default country
-
+  
     const handleChange = (selectedOption) => {
         setSelectedCountryCode(selectedOption);
         onSelect(selectedOption);
     };
-    
+
     const DropdownIndicator = () => null; // Custom DropdownIndicator component to remove the default dropdown icon
 
     // Custom styles to adjust the width of the dropdown menu
@@ -48,6 +50,5 @@ export function CountrySelector({ onSelect }) {
             components={{ DropdownIndicator }} // Replace the default dropdown icon with custom component
             styles={customStyles} // Apply custom styles to adjust the width of the dropdown menu
         />
-
     );
 }

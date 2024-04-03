@@ -1,27 +1,33 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { CountrySelector } from '@/components/CountrySelector';
-
-export default forwardRef(function PhonenumberInput({ type = 'text', className = '', isFocused = false, icon, ...props }, ref) {
+import { CountrySelector} from '@/components/CountrySelector';
+import defaultCountry from '@/components/CountrySelector';
+export default forwardRef(function PhonenumberInput({ type = 'text', className = '', isFocused = false, icon,setData, ...props }, ref) {
     const input = ref ? ref : useRef();
     const [selectedCountryCode, setSelectedCountryCode] = useState(null);
-
+    useEffect(() => {
+        if (!selectedCountryCode) {
+            console.log(defaultCountry.value);
+            setData('country_code', defaultCountry.value);
+            setSelectedCountryCode(defaultCountry.value);
+        }
+    }, [selectedCountryCode, setData]);
     useEffect(() => {
         if (isFocused) {
             input.current.focus();
         }
     },[]);
+   
 
     const handleCountrySelect = (selectedOption) => {
         setSelectedCountryCode(selectedOption);
-        if (typeof props.onSelectCountryCode === 'function') {
-            props.onSelectCountryCode(selectedOption.code); // Assuming the country code is available in the selectedOption
-        }
+        setData('country_code', selectedOption.value);  
     };
+    
     return (
         <>
             <div className="relative flex items-center"> {/* Flex container to ensure inline alignment */}
                 <div className="mr-2"> {/* Margin for spacing between elements */}
-                    <CountrySelector onSelect={handleCountrySelect} />
+                    <CountrySelector onSelect={handleCountrySelect}/>
                    
                 </div>
                 <input
@@ -37,3 +43,4 @@ export default forwardRef(function PhonenumberInput({ type = 'text', className =
         </>
     );
 });
+
