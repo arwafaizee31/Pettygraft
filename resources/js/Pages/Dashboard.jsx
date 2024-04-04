@@ -74,7 +74,7 @@ export default function Dashboard({ auth }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="overflow-hidden">
-                        <Grid className="overflow-hidden shadow-sm sm:rounded-lg" container>
+                        <Grid className="overflow-hidden shadow-sm sm:rounded-lg" container spacing={2}>
                             <Grid item xs={5}>
                                 <Grid container spacing={2}>
                                     <Grid item xs={6}>
@@ -100,7 +100,8 @@ export default function Dashboard({ auth }) {
                                 </Grid>
                             </Grid>
                             <Grid item xs={7}>
-                                <div className="p-6 text-gray-900 ">
+                                <div className="p-6 border border-gray-300">
+
                                 </div>
                             </Grid>
                             <Grid item xs={4}>
