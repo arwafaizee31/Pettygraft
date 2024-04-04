@@ -16,9 +16,48 @@
     
 }
 
+/* Define animation keyframes */
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  
+  /* Apply animations */
+  nav, header {
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+  }
+  
+  /* Apply fadeOut animation when hiding */
+  nav.hidden, header.hidden {
+    animation-name: fadeOut;
+    opacity: 0;
+    pointer-events: none; /* Ensure the hidden elements are not clickable */
+  }
+  
+  /* Apply fadeIn animation when showing */
+  nav:not(.hidden), header:not(.hidden) {
+    animation-name: fadeIn;
+    opacity: 1;
+    pointer-events: initial; /* Re-enable pointer events for visible elements */
+  }
+  
 /* Style the bottom border to change color when focused */
 
-.css-1nmdiq5-menu {
+/* .css-1nmdiq5-menu {
     position: relative !important;
    
     z-index: 1000 !important;
@@ -27,7 +66,7 @@
     position: relative !important;
    
     z-index: 1000 !important;
-}
+} */
 
 /* Navbar */
 
