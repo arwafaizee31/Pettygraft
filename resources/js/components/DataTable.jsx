@@ -57,9 +57,9 @@ const rows = [
   createData('Brazil', 'BR', 210147125, 8515767),
 ];
 
-export default function StickyHeadTable() {
+export default function DataTable() {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -93,7 +93,16 @@ export default function StickyHeadTable() {
               .map((row) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
+                    <TableCell key={columns[0].id} align={columns[0].align}>
+                      <div className="flex gap-4">
+                        <img src="register.png" alt="" height={50} width={50} className="border border-gray-900 rounded-full"/>
+                        <div className="flex flex-col">
+                          <h4>{row.name}</h4>
+                          <em>New Delhi</em>
+                        </div>
+                      </div>
+                    </TableCell>
+                    {columns.slice(1).map((column) => {
                       const value = row[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
@@ -110,7 +119,7 @@ export default function StickyHeadTable() {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[5,10,25,100]}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}

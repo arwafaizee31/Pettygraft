@@ -12,7 +12,7 @@ import LineChartDashboard from "@/components/LineChartDashboard";
 import DataTable from "@/components/DataTable";
 import DonutChart from "react-donut-chart";
 
-const gradientBackground = `linear-gradient(to bottom, #f88080, #daf6008a)`;
+const gradientBackground = `linear-gradient(to bottom, #e7bd0db5, #f88080)`;
 
 // Define texture pattern
 const texturePattern = `url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAADXSiBfAAAAeUlEQVQImWP4//8/w3BgYGBgYEYDZWgGJUYa2GZUYioIVX0BMAwdEHcYgcMwnDoSoyYoYG5iGGJYxgYAWAKMIZRYlh3jIJGx0BoRogmICyloZpMhAPjChLgW8EDAAjAiyg7IsKjAAA4jA9UJoUAExVPEMEwNz5QRnYagDEgFgQGKEmMFqh0AAAAASUVORK5CYII=")`;
@@ -72,6 +72,10 @@ const cardPrimary = (
         </CardContent>
     </React.Fragment>
 );
+
+
+
+
 export default function Dashboard({ auth }) {
     return (
         <AuthenticatedLayout
@@ -132,7 +136,8 @@ export default function Dashboard({ auth }) {
                                 </div>
                             </Grid>
                             <Grid item md={4} xs={12}>
-                                <div className="p-5 pt-8">
+                                <div className=" overflow-hidden shadow-sm sm:rounded-lg border-dashed border-2 border-sky-200 p-10 relative">
+                                <div className="absolute inset-0 bg-gradient-to-t from-primary to-transparent"></div>
                                     <DonutChart
                                         data={[
                                             {
@@ -144,11 +149,16 @@ export default function Dashboard({ auth }) {
                                                 value: 60,
                                                 
                                             },
+                                            
                                         ]}
-                                        innerRadius={0.1}
+                                        innerRadius={0.4}
                                         width={400}
+                                        height={400}
+                                        colors={['#e7bd0d',' rgb(58, 129, 188)']}
+                                        strokeColor={'#f88080'}
+                                        
                                     />
-                                    ;
+                                  
                                 </div>
                             </Grid>
                         </Grid>
