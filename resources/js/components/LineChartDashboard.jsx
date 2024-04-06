@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
-export default function GridDemo() {
+export default function LineChartDashboard() {
     return (
       <LineChart
         xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
@@ -15,3 +15,4 @@ export default function GridDemo() {
       />
     );
   }
+  
