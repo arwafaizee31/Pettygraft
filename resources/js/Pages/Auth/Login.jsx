@@ -31,8 +31,8 @@ export default function Login({ status, canResetPassword }) {
 
     return (
         <GuestLayout>
-            <div class="flex gap-x-8 sm:max-w-md lg:max-w-2xl mt-6 p-8 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                <div class="lg:w-80 md:w-80">
+            <div className="flex gap-x-8 sm:max-w-md lg:max-w-2xl mt-6 p-8 bg-white shadow-md overflow-hidden sm:rounded-lg">
+                <div className="lg:w-80 md:w-80">
                     <Head title="Log in" />
 
                     {status && (

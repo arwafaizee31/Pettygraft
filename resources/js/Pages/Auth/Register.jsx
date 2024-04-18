@@ -165,9 +165,9 @@ export default function Register() {
 
     return (
         <GuestLayout>
-            <div class="flex gap-4 sm:max-w-md lg:max-w-2xl mt-6 p-8 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <div className="flex gap-4 sm:max-w-md lg:max-w-2xl mt-6 p-8 bg-white shadow-md overflow-hidden sm:rounded-lg">
                
-           <div class='lg:w-80 md:w-80'>
+           <div className='lg:w-80 md:w-80'>
             <Head title="Register" />
            
             <Heading title="Sign Up" />

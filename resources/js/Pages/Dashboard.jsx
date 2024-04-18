@@ -97,7 +97,7 @@ export default function Dashboard({ auth }) {
                             spacing={2}
                         >
                             <Grid item xs={12} md={5}>
-                                <div class="p-3">
+                                <div className="p-3">
                                 <Grid container spacing={2}>
 
                                     <Grid item md={6} xs={6}>

@@ -49,7 +49,7 @@ export default function NavBar() {
     return (
         <div className="fixed w-full  z-1 top-0 shadow-2xl">
             <nav
-                className={`h-12 sm:h-28 bg-primary sm:bg-white ${
+                className={`h-12 sm:h-28 bg-white ${
                     showNav1 ? "" : "hidden"
                 }`}
                 id="nav1"
@@ -160,7 +160,7 @@ export default function NavBar() {
                 </div>
             </nav>
             <nav
-                className={`h-12 bg-white sm:bg-primary ${
+                className={`h-12 bg-primary sm:bg-primary ${
                     showNav2 ? "" : "hidden"
                 }`}
                 id="nav2"
@@ -216,7 +216,7 @@ export default function NavBar() {
                             <div className="hidden  space-x-8 sm:-my-px sm:flex">
                                 <NavLink
                                     className="text-white text-sm"
-                                    textSize="lg"
+                                    textsize="lg"
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
                                 >
@@ -226,7 +226,7 @@ export default function NavBar() {
                             <div className="hidden  space-x-8 sm:-my-px  sm:flex">
                                 <NavLink
                                     className="text-white text-sm"
-                                    textSize="sm"
+                                    textsize="sm"
                                     href={route("profile.edit")}
                                     active={route().current("profile.edit")}
                                 >
