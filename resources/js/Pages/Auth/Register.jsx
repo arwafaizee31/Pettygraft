@@ -426,7 +426,7 @@ export default function Register() {
            
             <img
         className="hidden lg:block md:block w-45 h-50 fill-current text-gray-500 drop-shadow-md hover:drop-shadow-xl"
-        src="register.png" alt="Your Image Alt Text"
+        src="/register.png" alt="Your Image Alt Text"
       />
       <Link
                         href={route('login')}

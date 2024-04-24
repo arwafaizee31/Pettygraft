@@ -135,7 +135,7 @@ export default function Login({ status, canResetPassword }) {
                             </div>
                             <div className="mt-4">
                                 <Link
-                                    href={route("password.request")}
+                                    href={route("password.requestCustom")}
                                     className="lg:hidden md:hidden underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-3"
                                 >
                                     Forgot your password?
@@ -148,12 +148,12 @@ export default function Login({ status, canResetPassword }) {
                 <div className="flex flex-col sm:justify-center items-center">
                     <img
                         className="hidden lg:block md:block w-64 h-60 fill-current text-gray-500 drop-shadow-md hover:drop-shadow-xl"
-                        src="login.png"
+                        src="/login.png"
                         alt="Your Image Alt Text"
                     />
                     {canResetPassword && (
                         <Link
-                            href={route("password.request")}
+                            href={route("password.requestCustom")}
                             className="hidden lg:block md:block underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-3"
                         >
                             Forgot your password?

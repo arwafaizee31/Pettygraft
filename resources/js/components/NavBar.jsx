@@ -59,24 +59,24 @@ export default function NavBar() {
                         <div className="flex">
                             <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("vendor-dashboard")}
+                                    active={route().current("vendor-dashboard")}
                                 >
                                     HOME
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("vendor-dashboard")}
+                                    active={route().current("vendor-dashboard")}
                                 >
                                     MY PETS
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("vendor-dashboard")}
+                                    active={route().current("vendor-dashboard")}
                                 >
                                     ALL PETS
                                 </NavLink>
@@ -92,16 +92,16 @@ export default function NavBar() {
                         <div className="flex">
                             <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("vendor-dashboard")}
+                                    active={route().current("vendor-dashboard")}
                                 >
                                     PREMIUM
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("vendor-dashboard")}
+                                    active={route().current("vendor-dashboard")}
                                 >
                                     ABOUT
                                 </NavLink>
@@ -112,6 +112,15 @@ export default function NavBar() {
                                     active={route().current("profile.edit")}
                                 >
                                     PROFILE
+                                </NavLink>
+                                <NavLink
+                                    className="text-sm"
+                                    textsize="sm"
+                                    method="post"
+                                    href={route("logout")}
+                                   
+                                >
+                                    logout
                                 </NavLink>
                             </div>
                         </div>
@@ -179,8 +188,8 @@ export default function NavBar() {
                             <div className="hidden  space-x-8 sm:-my-px sm:flex">
                                 <NavLink
                                     className="text-white text-sm"
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("vendor-dashboard")}
+                                    active={route().current("vendor-dashboard")}
                                 >
                                     HOME
                                 </NavLink>
@@ -188,8 +197,8 @@ export default function NavBar() {
                             <div className="hidden  space-x-8 sm:-my-px sm:flex">
                                 <NavLink
                                     className="text-white text-sm"
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("vendor-dashboard")}
+                                    active={route().current("vendor-dashboard")}
                                 >
                                     MY PETS
                                 </NavLink>
@@ -197,8 +206,8 @@ export default function NavBar() {
                             <div className="hidden  space-x-8 sm:-my-px sm:flex">
                                 <NavLink
                                     className="text-white text-sm"
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("vendor-dashboard")}
+                                    active={route().current("vendor-dashboard")}
                                 >
                                     ALL PETS
                                 </NavLink>
@@ -207,8 +216,8 @@ export default function NavBar() {
                             <div className="hidden  space-x-8 sm:-my-px sm:flex">
                                 <NavLink
                                     className="text-white text-sm"
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("vendor-dashboard")}
+                                    active={route().current("vendor-dashboard")}
                                 >
                                     PREMIUM
                                 </NavLink>
@@ -217,8 +226,8 @@ export default function NavBar() {
                                 <NavLink
                                     className="text-white text-sm"
                                     textsize="lg"
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("vendor-dashboard")}
+                                    active={route().current("vendor-dashboard")}
                                 >
                                     ABOUT
                                 </NavLink>
@@ -232,6 +241,7 @@ export default function NavBar() {
                                 >
                                     PROFILE
                                 </NavLink>
+                               
                             </div>
                         </div>
                     </div>
@@ -245,8 +255,8 @@ export default function NavBar() {
                 >
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink
-                            href={route("dashboard")}
-                            active={route().current("dashboard")}
+                            href={route("vendor-dashboard")}
+                            active={route().current("vendor-dashboard")}
                         >
                             Dashboard
                         </ResponsiveNavLink>
