@@ -3,6 +3,7 @@ import ApplicationLogo from "@/components/ApplicationLogo";
 import NavLink from "@/components/NavLink";
 import ResponsiveNavLink from "@/components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
+import { IoClose, IoMenu } from "react-icons/io5";
 
 export default function NavBar() {
     const [showNav1, setShowNav1] = useState(true);
@@ -49,13 +50,23 @@ export default function NavBar() {
     return (
         <div className="fixed w-full  z-1 top-0 shadow-2xl">
             <nav
-                className={`h-12 sm:h-28 bg-white ${
+                className={`h-12 sm:h-28 flex bg-white ${
                     showNav1 ? "" : "hidden"
                 }`}
                 id="nav1"
             >
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between sm:justify-center h-12 sm:h-28">
+                {/* <div className="flex sm:hidden">
+                    <div className="shrink-0 flex sm:items-center nav1-logo">
+                        <Link href="/">
+                            <ApplicationLogo className="block h-12 sm:h-28 w-auto fill-current text-gray-800" />
+                        </Link>
+                    </div>
+                </div> */}
+                <div className="max-w-7xl sls sm:mx-auto px-4 sm:px-6 lg:px-8">
+                    <div
+                        className="flex justify-between sm:justify-center h-12 sm:h-28"
+                        
+                    >
                         <div className="flex">
                             <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
@@ -82,7 +93,7 @@ export default function NavBar() {
                                 </NavLink>
                             </div>
                         </div>
-                        <div className="flex">
+                        <div className="flex sm:-my-px sm:flex space-x-8">
                             <div className="shrink-0 flex sm:items-center nav1-logo">
                                 <Link href="/">
                                     <ApplicationLogo className="block h-12 sm:h-28 w-auto fill-current text-gray-800" />
@@ -124,48 +135,10 @@ export default function NavBar() {
                                 </NavLink>
                             </div>
                         </div>
+                    
 
-                        <div className="-me-2 flex items-center sm:hidden">
-                            <button
-                                onClick={() =>
-                                    setShowingNavigationDropdown(
-                                        (previousState) => !previousState
-                                    )
-                                }
-                                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
-                            >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? "inline-flex"
-                                                : "hidden"
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? "inline-flex"
-                                                : "hidden"
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
                     </div>
+                  
                 </div>
             </nav>
             <nav
@@ -246,13 +219,8 @@ export default function NavBar() {
                         </div>
                     </div>
                 </div>
-
-                <div
-                    className={
-                        (showingNavigationDropdown ? "block" : "hidden") +
-                        " sm:hidden"
-                    }
-                >
+                {/* 
+                <div className={ (showingNavigationDropdown ? "block" : "hidden") + " sm:hidden"}>
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink
                             href={route("vendor-dashboard")}
@@ -285,10 +253,9 @@ export default function NavBar() {
                             </ResponsiveNavLink>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </nav>
             {renderHeader(
-               
                 "Dashboard",
                 "bg-primary",
                 "text-white",
