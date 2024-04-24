@@ -43,6 +43,10 @@ Route::group(['middleware' => ['admin', 'verified'], 'prefix' => 'admin'], funct
         Route::get('/dashboard', function () {
             return Inertia::render('PetOwner/Dashboard');
         })->name('petOwner-dashboard');
+        
+        Route::get('/petRegistration', function () {
+            return Inertia::render('PetRegistration');
+        })->name('PetRegistration');
     });
     Route::group(['middleware' => ['vendor', 'verified'], 'prefix' => 'vendor'], function (){
    
