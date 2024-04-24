@@ -15,7 +15,7 @@
     border-bottom: 1px solid #ccc !important; /* Set the default bottom border color */
     
 }
-@media (max-width: 425px) {
+/* @media (max-width: 425px) {
   .nav1-logo {
       transform: translateX(-64px);
   }
@@ -24,7 +24,7 @@
   .nav1-logo {
       transform: translateX(-96px);
   }
-}
+} */
 
 
 

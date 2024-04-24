@@ -28,6 +28,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
+Route::get('/petRegistration', function () {
+    return Inertia::render('PetRegistration');
+})->name('PetRegistration');
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
