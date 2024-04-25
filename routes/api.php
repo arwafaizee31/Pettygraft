@@ -4,7 +4,7 @@ use App\Http\Controllers\PetsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\PetsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,3 +23,5 @@ Route::get('/roles', [UserController::class, 'roles']);
 Route::get('/petsGender',[PetsController::class, 'getPetGender']);
 Route::get('/petTypes',[PetsController::class, 'getPetTypes']);
 Route::get('/petBreeds',[PetsController::class, 'getPetBreeds']);
+
+Route::get('/allPets', [PetsController::class, 'allpets']);

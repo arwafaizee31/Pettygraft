@@ -16,7 +16,7 @@ class CheckPetownerRole
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->roles()->where('role_name', 'pet_owner')->exists()) {
+        if (Auth::check() && Auth::user()->roles()->where('role_id', '3')->exists()) {
             return $next($request);
         }
 

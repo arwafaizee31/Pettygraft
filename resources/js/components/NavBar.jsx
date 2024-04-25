@@ -127,7 +127,7 @@ export default function NavBar() {
                                 <NavLink
                                     className="text-sm"
                                     textsize="sm"
-                                    method="post"
+                                   
                                     href={route("logout")}
                                    
                                 >

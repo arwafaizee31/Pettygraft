@@ -17,4 +17,8 @@ class PetBreeds extends Model
         'breed',
         'breed_display_name'
     ];
+    public function pets()
+    {
+        return $this->hasMany(Pets::class, 'breed', 'id');
+    }
 }

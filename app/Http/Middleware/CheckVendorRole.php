@@ -15,7 +15,7 @@ class CheckVendorRole
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->roles()->where('role_name', 'vendor')->exists()) {
+        if (Auth::check() && Auth::user()->roles()->where('role_id', '4')->exists()) {
             return $next($request);
         }
 

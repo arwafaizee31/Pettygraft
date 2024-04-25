@@ -7,59 +7,62 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import DataTableActions from '@/components/DataTableActions';
+import Tooltip from '@mui/material/Tooltip'; // Import Tooltip component
+import PetProfileCard from '@/components/PetProfileCard'; // Import PetProfileCard component
+import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 
-const columns = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-  {
-    id: 'population',
-    label: 'Population',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'density',
-    label: 'Density',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toFixed(2),
-  },
-];
 
-function createData(name, code, population, size) {
-  const density = population / size;
-  return { name, code, population, size, density };
-}
-
-const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
-];
-
-export default function DataTable() {
+const defaultTheme = createTheme();
+const theme = createTheme({
+  components: {
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: "2em",
+          color: "yellow",
+          backgroundColor: "red"
+        }
+      }
+    }
+  }
+});
+const CustomTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} componentsProps={{ tooltip: { className: className } }} />
+))(`
+    color: black;
+    background-color: white;
+   
+`);
+export default function DataTable({ tableData, fields, mainfields, options }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [columns, setColumns] = React.useState([]);
+  const [columnsMain, setColumnsMain] = React.useState([]);
+
+  React.useEffect(() => {
+    if (fields.length > 0) {
+      const formattedColumns = fields.map(field => ({
+        id: field,
+        label: field.charAt(0).toUpperCase() + field.slice(1), // Capitalize first letter
+        minWidth: 170,
+        align: 'left'
+      }));
+      setColumns(formattedColumns);
+    }
+  }, [fields]);
+
+  React.useEffect(() => {
+    if (mainfields.length > 0) {
+      const formattedColumnsMain = mainfields.map(mainfield => ({
+        id: mainfield,
+        label: mainfield.charAt(0).toUpperCase() + mainfield.slice(1), // Capitalize first letter
+        minWidth: 170,
+        align: 'left'
+      }));
+      setColumnsMain(formattedColumnsMain);
+    }
+  }, [mainfields]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -88,40 +91,56 @@ export default function DataTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {tableData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    <TableCell key={columns[0].id} align={columns[0].align}>
-                      <div className="flex gap-4">
-                        <img src="/register.png" alt="" height={50} width={50} className="border border-gray-900 rounded-full"/>
+              .map((row, index) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                  {columnsMain.map((columnMain) => (
+                    <TableCell key={columnMain.id} align={columnMain.align}>
+                      {/* Render different formats based on the column id */}
+                      {columnMain.id === 'pet_name' && (
+                        <CustomTooltip title={<PetProfileCard petName={row['pet_name']} petType={row['type_id']} petGender={row['gender']} petBreed={row['breed']} parentName={row['owner_id']} contact={row['pet_contact']} email={row['pet_email']} petAge={row['age']}/>} arrow >
+                          <div className="flex gap-4">
+                            {/* Use a conditional statement to choose the image based on the pet type */}
+                            <img
+                              src={row['type_id'] === 1 ? '/dogtable.png' : '/cattable.png'}
+                              alt=""
+                              height={50}
+                              width={50}
+                              className="border border-gray-900 rounded-full"
+                            />
+                            <div className="flex flex-col">
+                              <h4>{row['pet_name']}</h4>
+                              {/* Display the breed name instead of "New Delhi" */}
+                              <em>{row['breed']}</em>
+                            </div>
+                          </div>
+                        </CustomTooltip>
+                      )}
+                      {columnMain.id === 'pet_location' && (
                         <div className="flex flex-col">
-                          <h4>{row.name}</h4>
-                          <em>New Delhi</em>
+                          <h4>{row['pet_country']}</h4>
+                          {/* Display the breed name instead of "New Delhi" */}
+                          <em>{row['pet_city']},{row['pet_state']}</em>
                         </div>
-                      </div>
+                      )}
+                      {/* Render action buttons if the column is 'Action' */}
+                      {columnMain.id === 'Action' && (
+                        <DataTableActions options={options} />
+                      )}
+                      {/* Render other fields normally */}
+                      {columnMain.id !== ('pet_name'||'pet_location') && row[columnMain.id]}
                     </TableCell>
-                    {columns.slice(1).map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+                  ))}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5,10,25,100]}
+        rowsPerPageOptions={[5, 10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={tableData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

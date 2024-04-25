@@ -17,7 +17,7 @@ class CheckAdminRole
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->roles()->where('role_name', 'admin')->exists()) {
+        if (Auth::check() && Auth::user()->roles()->where('role_id', '2')->exists()) {
             return $next($request);
         }
 

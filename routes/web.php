@@ -44,9 +44,9 @@ Route::group(['middleware' => ['admin', 'verified'], 'prefix' => 'admin'], funct
         Route::get('/dashboard', function () {
             return Inertia::render('PetOwner/Dashboard');
         })->name('petOwner-dashboard');
-        
+
         Route::get('/petRegistration', function () {
-            return Inertia::render('PetRegistration');
+            return Inertia::render('PetOwner/PetRegistration');
         })->name('PetRegistration');
     });
     Route::group(['middleware' => ['vendor', 'verified'], 'prefix' => 'vendor'], function (){
@@ -55,6 +55,10 @@ Route::group(['middleware' => ['admin', 'verified'], 'prefix' => 'admin'], funct
         Route::get('/dashboard', function () {
             return Inertia::render('Vendor/Dashboard');
         })->name('vendor-dashboard');
+
+        Route::get('/all-pets', function () {
+            return Inertia::render('Vendor/AllPets');
+        })->name('vendor-allpets');
     });
   
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
