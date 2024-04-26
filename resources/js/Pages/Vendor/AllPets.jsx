@@ -3,12 +3,13 @@ import { Head } from "@inertiajs/react";
 import React, { useEffect, useState } from 'react';
 import DataTable from "@/components/DataTable";
 import { getDialingCode, getCountryName, getStateName , ageCalculation} from '@/utils/utils';
-import CatProfileCard from "@/components/PetProfileCard";
+import PetProfileCard from "@/components/PetProfileCard";
 
 export default function AllPets({ auth }) {
     const [pets, setPets] = useState([]);
     const [petStates, setPetStates] = useState({});
-
+   
+    
    
     useEffect(() => {
         // Fetch pets data from your API endpoint
@@ -21,7 +22,7 @@ export default function AllPets({ auth }) {
             .catch(error => {
                 console.error('Error fetching pets:', error);
             });
-            
+        
     }, []);
     useEffect(() => {
         // Fetch pet states when pets data changes
@@ -39,7 +40,7 @@ export default function AllPets({ auth }) {
     };
     
     const petFields = ['Name', 'Owner Name',  'Date of birth', 'Gender','Last Vaccination Date','Contact no.','Location','Action'];
-    const petDataFields = ['pet_name', 'owner_id', 'd_o_b', 'gender','last_vaccine_date','pet_contact','pet_location','Action'];
+    const petDataFields = ['pet_name', 'owner_id', 'd_o_b', 'last_vaccine_date','pet_contact','pet_location','gender','Action'];
     const formatPetsData = (pets, petDataFields) => {   
         const formatDate = (dateString) => {
             const date = new Date(dateString);
@@ -91,13 +92,14 @@ export default function AllPets({ auth }) {
             });
             
             formattedPet['type_id'] = pet.type_id;
-            formattedPet['breed'] = pet.breed.breed_display_name;
+            formattedPet['breed'] = pet.breeds.breed_display_name;
             formattedPet['pet_contact'] = "+" + getDialingCode(pet.owner.country_code) +" "+ pet.owner.phone_no;
             formattedPet['pet_country'] = getCountryName(pet.owner.country);
             formattedPet['pet_state'] = petStates[pet.id] || 'Fetching...', 
             formattedPet['pet_city'] = pet.owner.city;
             formattedPet['pet_email'] = pet.owner.email;
             formattedPet['age'] = ageCalculation(pet.d_o_b);
+            
             return formattedPet;
         });
     };

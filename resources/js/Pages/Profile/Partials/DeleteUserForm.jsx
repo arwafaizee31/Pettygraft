@@ -7,9 +7,10 @@ import SecondaryButton from '@/components/SecondaryButton';
 import ProfileTextInput from '@/components/ProfileTextInput';
 import { useForm } from '@inertiajs/react';
 
-export default function DeleteUserForm({ className = '' }) {
+export default function DeleteUserForm({ className = '' , users}) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
     const passwordInput = useRef();
+    const userId = users.id;
 
     const {
         data,
@@ -28,8 +29,9 @@ export default function DeleteUserForm({ className = '' }) {
 
     const deleteUser = (e) => {
         e.preventDefault();
+        const routeUrl = route('petProfile.destroy', { id: userId });
 
-        destroy(route('profile.destroy'), {
+        destroy(routeUrl, {
             preserveScroll: true,
             onSuccess: () => closeModal(),
             onError: () => passwordInput.current.focus(),
@@ -49,8 +51,8 @@ export default function DeleteUserForm({ className = '' }) {
                 <h2 className="text-lg font-medium text-gray-900">Delete Account</h2>
 
                 <p className="mt-1 text-sm text-gray-600">
-                    Once your account is deleted, all of its resources and data will be permanently deleted. Before
-                    deleting your account, please download any data or information that you wish to retain.
+                    Once this account is deleted, all of its resources and data will be permanently deleted. Before
+                    deleting this account, please download any data or information that you wish to retain.
                 </p>
             </header>
 
@@ -59,12 +61,12 @@ export default function DeleteUserForm({ className = '' }) {
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
-                        Are you sure you want to delete your account?
+                        Are you sure you want to delete this account?
                     </h2>
 
                     <p className="mt-1 text-sm text-gray-600">
-                        Once your account is deleted, all of its resources and data will be permanently deleted. Please
-                        enter your password to confirm you would like to permanently delete your account.
+                        Once this account is deleted, all of its resources and data will be permanently deleted. Please
+                        enter your password to confirm you would like to permanently delete this account.
                     </p>
 
                     <div className="mt-6">

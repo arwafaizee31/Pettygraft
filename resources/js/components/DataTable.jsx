@@ -11,6 +11,7 @@ import DataTableActions from '@/components/DataTableActions';
 import Tooltip from '@mui/material/Tooltip'; // Import Tooltip component
 import PetProfileCard from '@/components/PetProfileCard'; // Import PetProfileCard component
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import { useEffect, useState } from 'react';
 
 
 const defaultTheme = createTheme();
@@ -39,7 +40,28 @@ export default function DataTable({ tableData, fields, mainfields, options }) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [columns, setColumns] = React.useState([]);
   const [columnsMain, setColumnsMain] = React.useState([]);
-
+  const [genderOptions, setGenderOptions] = useState([]);
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedGenderName, setSelectedGenderName] = useState("");
+  useEffect(() => {
+    // Fetch roles data from your API endpoint
+    fetch("/api/petsGender")
+        .then((response) => response.json())
+        .then((data) => {
+            const options = Object.entries(data).map(([key, value]) => ({
+                value: key,
+                label: value,
+            }));
+            setGenderOptions(options);
+             setSelectedGender(options[petGender - 1].value);
+            setSelectedGenderName(options[petGender - 1].label);
+           
+            // Set roles data in state
+        })
+        .catch((error) => {
+            console.error("Error fetching petgender:", error);
+        });
+}, []);
   React.useEffect(() => {
     if (fields.length > 0) {
       const formattedColumns = fields.map(field => ({
@@ -124,12 +146,14 @@ export default function DataTable({ tableData, fields, mainfields, options }) {
                           <em>{row['pet_city']},{row['pet_state']}</em>
                         </div>
                       )}
+                     
+                     
                       {/* Render action buttons if the column is 'Action' */}
                       {columnMain.id === 'Action' && (
                         <DataTableActions options={options} />
                       )}
                       {/* Render other fields normally */}
-                      {columnMain.id !== ('pet_name'||'pet_location') && row[columnMain.id]}
+                      {columnMain.id !== ('pet_name'||'pet_location' || 'gender') && row[columnMain.id]}
                     </TableCell>
                   ))}
                 </TableRow>

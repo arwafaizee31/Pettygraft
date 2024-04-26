@@ -18,5 +18,8 @@ class Vaccines extends Model
        'max_age',
 
     ];
-        
+    public function pets()
+    {
+        return $this->belongsToMany(Pets::class, 'pet_vaccines');
+    }
 }

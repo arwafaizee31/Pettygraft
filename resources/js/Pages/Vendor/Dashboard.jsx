@@ -164,7 +164,7 @@ const formatPetsData = (pets, petDataFields) => {
         });
         
         formattedPet['type_id'] = pet.type_id;
-        formattedPet['breed'] = pet.breed.breed_display_name;
+        formattedPet['breed'] = pet.breeds.breed_display_name;
         formattedPet['pet_contact'] = "+" + getDialingCode(pet.owner.country_code) +" "+ pet.owner.phone_no;
         formattedPet['pet_country'] = getCountryName(pet.owner.country);
         formattedPet['pet_state'] = petStates[pet.id] || 'Fetching...', 

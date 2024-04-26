@@ -159,7 +159,7 @@ export default function Register() {
             city: data.city, // Include selected city value
             roles: roleIdsString,
         };  
-      console.log(formData);
+    
         post(route('register'));
     };
 

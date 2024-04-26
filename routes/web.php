@@ -6,7 +6,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\PetsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\PetsController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +17,7 @@ use App\Http\Controllers\PetsController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes(['verify' => true]);
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -32,15 +33,15 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-Route::group(['middleware' => ['admin', 'verified'], 'prefix' => 'admin'], function (){
-   
+    Route::group(['middleware' => ['admin', 'verified'], 'prefix' => 'admin'], function () {
+
         // Define routes accessible only by Admin
         Route::get('/dashboard', function () {
             return Inertia::render('Admin/Dashboard');
         })->name('admin-dashboard');
     });
-    Route::group(['middleware' => ['petowner', 'verified'], 'prefix' => 'petowner'], function (){
-   
+    Route::group(['middleware' => ['petowner', 'verified'], 'prefix' => 'petowner'], function () {
+
         // Define routes accessible only by Pet Owner
         Route::get('/dashboard', function () {
             return Inertia::render('PetOwner/Dashboard');
@@ -51,9 +52,13 @@ Route::group(['middleware' => ['admin', 'verified'], 'prefix' => 'admin'], funct
         })->name('PetRegistration');
 
         Route::get('/petProfilePage/{id}', [PetsController::class, 'show'])->name('petOwner-PetProfilePage');
+        Route::delete('/petProfile/{id}', [PetsController::class, 'destroy'])->name('petProfile.destroy');
+        Route::put('/privateVendor/{petId}/update', [PetsController::class, 'privateVendorUpdate'])->name('privateVendor.update');
+        Route::post('/update-pet-image/{petId}', [PetsController::class, 'updatePetImage'])->name('update-pet-image');
+        Route::put('/update-pet-profile/{petId}', [PetsController::class, 'updatePetProfile'])->name('update-pet-profile');
     });
-    Route::group(['middleware' => ['vendor', 'verified'], 'prefix' => 'vendor'], function (){
-   
+    Route::group(['middleware' => ['vendor', 'verified'], 'prefix' => 'vendor'], function () {
+
         // Define routes accessible only by Vendor
         Route::get('/dashboard', function () {
             return Inertia::render('Vendor/Dashboard');
@@ -63,10 +68,10 @@ Route::group(['middleware' => ['admin', 'verified'], 'prefix' => 'admin'], funct
             return Inertia::render('Vendor/AllPets');
         })->name('vendor-allpets');
     });
-  
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

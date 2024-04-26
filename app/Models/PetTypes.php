@@ -16,4 +16,8 @@ class PetTypes extends Model
         'pet_type',
         'pet_types_display_name',
     ];
+    public function pets()
+    {
+        return $this->hasMany(Pets::class, 'type_id', 'id');
+    }
 }

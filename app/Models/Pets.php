@@ -22,14 +22,22 @@ class Pets extends Model
         'last_vaccine_date',
         'is_private',
         'permanent_vendor_id',
+        'avatar'
     ];
-    public function breed()
+    public function breeds()
     {
         return $this->belongsTo(PetBreeds::class, 'breed', 'id');
+    }
+    public function types()
+    {
+        return $this->belongsTo(PetTypes::class, 'type_id', 'id');
     }
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id', 'id');
     }
-
+    public function vaccines()
+    {
+        return $this->belongsToMany(Vaccines::class, 'pet_vaccines');
+    }
 }
