@@ -1,15 +1,15 @@
 import InputError from '@/components/InputError';
 import InputLabel from '@/components/InputLabel';
 import PrimaryButton from '@/components/PrimaryButton';
-import TextInput from '@/components/TextInput';
+import ProfileTextInput from '@/components/ProfileTextInput';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 
 export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }) {
     const user = usePage().props.auth.user;
-
+    
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        name: user.name,
+        fname: user.fname,
         email: user.email,
     });
 
@@ -31,25 +31,25 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="fname" value="fname" />
 
-                    <TextInput
-                        id="name"
+                    <ProfileTextInput
+                        id="fname"
                         className="mt-1 block w-full"
-                        value={data.name}
-                        onChange={(e) => setData('name', e.target.value)}
+                        value={data.fname}
+                        onChange={(e) => setData('fname', e.target.value)}
                         required
                         isFocused
-                        autoComplete="name"
+                        autoComplete="fname"
                     />
 
-                    <InputError className="mt-2" message={errors.name} />
+                    <InputError className="mt-2" message={errors.fname} />
                 </div>
 
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
 
-                    <TextInput
+                    <ProfileTextInput
                         id="email"
                         type="email"
                         className="mt-1 block w-full"

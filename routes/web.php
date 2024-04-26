@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\PetsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PetsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,6 +49,8 @@ Route::group(['middleware' => ['admin', 'verified'], 'prefix' => 'admin'], funct
         Route::get('/petRegistration', function () {
             return Inertia::render('PetOwner/PetRegistration');
         })->name('PetRegistration');
+
+        Route::get('/petProfilePage/{id}', [PetsController::class, 'show'])->name('petOwner-PetProfilePage');
     });
     Route::group(['middleware' => ['vendor', 'verified'], 'prefix' => 'vendor'], function (){
    

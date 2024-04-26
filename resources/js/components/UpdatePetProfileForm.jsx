@@ -1,0 +1,183 @@
+import InputError from '@/components/InputError';
+import InputLabel from '@/components/InputLabel';
+import PrimaryButton from '@/components/PrimaryButton';
+import ProfileTextInput from '@/components/ProfileTextInput';
+import { Link, useForm, usePage } from '@inertiajs/react';
+import { Transition } from '@headlessui/react';
+
+export default function UpdatePetProfileForm({ mustVerifyEmail, status, className = '' , users}) {
+    const user = users;
+    
+    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
+        pet_name: user.pet_name,
+        d_o_b: user.d_o_b,
+       last_vaccine_date: user.last_vaccine_date,
+       
+    });
+
+    const submit = (e) => {
+        e.preventDefault();
+
+        patch(route('profile.update'));
+    };
+
+    return (
+        <section className={className}>
+            <header>
+                <h2 className="text-lg font-medium text-gray-900">Profile Information</h2>
+
+                <p className="mt-1 text-sm text-gray-600">
+                    Update your account's profile information and email address.
+                </p>
+            </header>
+
+            <form onSubmit={submit} className="mt-6 space-y-6">
+                <div>
+                    <InputLabel htmlFor="pet_name" value="Pet Name" />
+
+                    <ProfileTextInput
+                        id="pet_name"
+                        className="mt-1 block w-full"
+                        value={data.pet_name}
+                        onChange={(e) => setData('pet_name', e.target.value)}
+                        required
+                        isFocused
+                        autoComplete="pet_name"
+                    />
+
+                    <InputError className="mt-2" message={errors.pet_name} />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="d_o_b" value="Date of Birth" />
+
+                    <ProfileTextInput
+                        id="=d_o_b"
+                        className="mt-1 block w-full"
+                        
+                        value={data.d_o_b}
+                        type="date"
+                        onChange={(e) => setData('d_o_b', e.target.value)}
+                        required
+                        isFocused
+                        autoComplete="d_o_b"
+                    />
+
+                    <InputError className="mt-2" message={errors.d_o_b} />
+                </div>
+               
+                <div>
+                    <InputLabel htmlFor="fname" value="fname" />
+
+                    <ProfileTextInput
+                        id="fname"
+                        className="mt-1 block w-full"
+                        value={data.fname}
+                        onChange={(e) => setData('fname', e.target.value)}
+                        required
+                        isFocused
+                        autoComplete="fname"
+                    />
+
+                    <InputError className="mt-2" message={errors.fname} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="fname" value="fname" />
+
+                    <ProfileTextInput
+                        id="fname"
+                        className="mt-1 block w-full"
+                        value={data.fname}
+                        onChange={(e) => setData('fname', e.target.value)}
+                        required
+                        isFocused
+                        autoComplete="fname"
+                    />
+
+                    <InputError className="mt-2" message={errors.fname} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="fname" value="fname" />
+
+                    <ProfileTextInput
+                        id="fname"
+                        className="mt-1 block w-full"
+                        value={data.fname}
+                        onChange={(e) => setData('fname', e.target.value)}
+                        required
+                        isFocused
+                        autoComplete="fname"
+                    />
+
+                    <InputError className="mt-2" message={errors.fname} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="last_vaccine_date" value="Last Vaccination Date" />
+
+                    <ProfileTextInput
+                        id="last_vaccine_date"
+                        className="mt-1 block w-full"
+                        value={data.last_vaccine_date}
+                        type="date"
+                        onChange={(e) => setData('last_vaccine_date', e.target.value)}
+                        required
+                        isFocused
+                        autoComplete="last_vaccine_date"
+                    />
+
+                    <InputError className="mt-2" message={errors.fname} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="fname" value="fname" />
+
+                    <ProfileTextInput
+                        id="fname"
+                        className="mt-1 block w-full"
+                        value={data.fname}
+                        onChange={(e) => setData('fname', e.target.value)}
+                        required
+                        isFocused
+                        autoComplete="fname"
+                    />
+
+                    <InputError className="mt-2" message={errors.fname} />
+                </div>
+                {mustVerifyEmail && user.email_verified_at === null && (
+                    <div>
+                        <p className="text-sm mt-2 text-gray-800">
+                            Your email address is unverified.
+                            <Link
+                                href={route('verification.send')}
+                                method="post"
+                                as="button"
+                                className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Click here to re-send the verification email.
+                            </Link>
+                        </p>
+
+                        {status === 'verification-link-sent' && (
+                            <div className="mt-2 font-medium text-sm text-green-600">
+                                A new verification link has been sent to your email address.
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                <div className="flex items-center gap-4">
+                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+
+                    <Transition
+                        show={recentlySuccessful}
+                        enter="transition ease-in-out"
+                        enterFrom="opacity-0"
+                        leave="transition ease-in-out"
+                        leaveTo="opacity-0"
+                    >
+                        <p className="text-sm text-gray-600">Saved.</p>
+                    </Transition>
+                </div>
+            </form>
+        </section>
+    );
+}

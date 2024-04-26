@@ -25,3 +25,5 @@ Route::get('/petTypes',[PetsController::class, 'getPetTypes']);
 Route::get('/petBreeds',[PetsController::class, 'getPetBreeds']);
 
 Route::get('/allPets', [PetsController::class, 'allpets']);
+
+
