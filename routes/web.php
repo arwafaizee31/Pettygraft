@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\PetsController;
 use App\Http\Controllers\ProfileController;
-
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,7 +16,7 @@ use App\Http\Controllers\ProfileController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Auth::routes(['verify' => true]);
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -26,17 +26,37 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
-Route::get('/petRegistration', function () {
-    return Inertia::render('PetRegistration');
-})->name('PetRegistration');
-Route::post('/petRegistration', function () {
-    return Inertia::render('PetRegistration');
-})->name('PetRegistration');
-Route::post('petRegistration', [PetsController::class, 'storePetsData'])->name('petRegistration.store');
-Route::middleware('auth')->group(function () {
+
+
+
+Route::middleware(['auth', 'verified'])->group(function () {
+
+Route::group(['middleware' => ['admin', 'verified'], 'prefix' => 'admin'], function (){
+   
+        // Define routes accessible only by Admin
+        Route::get('/dashboard', function () {
+            return Inertia::render('Admin/Dashboard');
+        })->name('admin-dashboard');
+    });
+    Route::group(['middleware' => ['petowner', 'verified'], 'prefix' => 'petowner'], function (){
+   
+        // Define routes accessible only by Pet Owner
+        Route::get('/dashboard', function () {
+            return Inertia::render('PetOwner/Dashboard');
+        })->name('petOwner-dashboard');
+        
+        Route::get('/petRegistration', function () {
+            return Inertia::render('PetRegistration');
+        })->name('PetRegistration');
+    });
+    Route::group(['middleware' => ['vendor', 'verified'], 'prefix' => 'vendor'], function (){
+   
+        // Define routes accessible only by Vendor
+        Route::get('/dashboard', function () {
+            return Inertia::render('Vendor/Dashboard');
+        })->name('vendor-dashboard');
+    });
+  
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

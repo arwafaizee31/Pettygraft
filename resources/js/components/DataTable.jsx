@@ -95,7 +95,7 @@ export default function DataTable() {
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                     <TableCell key={columns[0].id} align={columns[0].align}>
                       <div className="flex gap-4">
-                        <img src="register.png" alt="" height={50} width={50} className="border border-gray-900 rounded-full"/>
+                        <img src="/register.png" alt="" height={50} width={50} className="border border-gray-900 rounded-full"/>
                         <div className="flex flex-col">
                           <h4>{row.name}</h4>
                           <em>New Delhi</em>

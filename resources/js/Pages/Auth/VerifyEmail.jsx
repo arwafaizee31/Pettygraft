@@ -1,13 +1,19 @@
+
 import GuestLayout from '@/Layouts/GuestLayout';
 import PrimaryButton from '@/components/PrimaryButton';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function VerifyEmail({ status }) {
-    
+    const { post, processing } = useForm({});
+
+    const submit = (e) => {
+        e.preventDefault();
+
+        post(route('verification.send'));
+    };
 
     return (
         <GuestLayout>
-             <div className="sm:max-w-md lg:max-w-2xl mt-6 p-8 bg-white shadow-md overflow-hidden sm:rounded-lg">
             <Head title="Email Verification" />
 
             <div className="mb-4 text-sm text-gray-600">
@@ -35,7 +41,6 @@ export default function VerifyEmail({ status }) {
                     </Link>
                 </div>
             </form>
-            </div>
         </GuestLayout>
     );
 }
