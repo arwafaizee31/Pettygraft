@@ -1,100 +1,125 @@
 import GuestLayout from "@/Layouts/GuestLayout";
 import React, { useEffect, useState } from "react";
-import InputError from "@/components/InputError";
-import InputLabel from "@/components/InputLabel";
 import PrimaryButton from "@/components/PrimaryButton";
-import Checkbox from "@/components/Checkbox";
 import TextInput from "@/components/TextInput";
 import Heading from "@/components/Heading";
-import LocationSelector from "@/components/LocationSelector";
-import ApplicationLogo from "@/components/ApplicationLogo";
-import PhonenumberInput from "@/components/PhonenumberInput";
-
 import { Head, Link, useForm } from "@inertiajs/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Import FontAwesome icon component
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { faLock } from "@fortawesome/free-solid-svg-icons";
-import { faPhone } from "@fortawesome/free-solid-svg-icons";
-import { Country, State, City } from "country-state-city";
-export default function PetRegistration() {
-    return (
-        // <div>lala</div>
-        <GuestLayout>
-            <Head title="Register" />
+import RadioButtonsGroup from "@/components/RadioButton";
 
-            <Heading title="Sign Up" />
-            <form>
-                <div className="max-h-[300px] overflow-y-auto">
+export default function PetRegistration() {
+    const [genderOptions, setGenderOptions] = useState([]);
+
+    useEffect(() => {
+        fetch("/api/petsGender")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (
+                    data &&
+                    typeof data === "object" &&
+                    Object.keys(data).length > 0
+                ) {
+                    const options = Object.entries(data).map(
+                        ([key, value]) => ({
+                            value: key,
+                            label: value,
+                        })
+                    );
+                    setGenderOptions(options);
+                } else {
+                    throw new Error("Invalid data format received from server");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching gender options:", error);
+            });
+    }, []);
+
+    const [petTypes, setPetTypes] = useState([]);
+    useEffect(() => {
+        fetch("/api/petTypes")
+            .then((response) => response.json())
+            .then((data) => {
+                setPetTypes(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching pet types:", error);
+            });
+    }, []);
+
+    const [petBreeds, setPetBreeds] = useState([]);
+    useEffect(() => {
+        fetch("/api/petBreeds")
+            .then((response) => response.json())
+            .then((data) => {
+                setPetBreeds(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching pet breeds:", error);
+            });
+    }, []);
+
+    const [formData, setFormData] = useState({
+        petName: "",
+        dob: "",
+    });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+    const { post } = useForm();
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        post("/petRegistration", formData)
+            .then(() => {
+                // Handle success (e.g., redirect)
+            })
+            .catch((error) => {
+                console.error("Error submitting form:", error);
+                // Handle error (e.g., show error message)
+            });
+    };
+
+    return (
+        <GuestLayout>
+            <Heading title="Register your pets!!" />
+            <form onSubmit={handleSubmit}>
+                <div className="max-h-[800px] overflow-y-auto">
                     <div>
                         <TextInput
-                            icon={
-                                <FontAwesomeIcon
-                                    icon={faUser}
-                                    className="h-5 w-5 text-gray-400"
-                                />
-                            }
-                        />
-
-                    </div>
-                    <div className="mt-4">
-                        <TextInput
-                            icon={
-                                <FontAwesomeIcon
-                                    icon={faUser}
-                                    className="h-5 w-5 text-gray-400"
-                                />
-                            }
+                            placeholder="pet name"
+                            id="petName"
+                            name="petName"
+                            // value={data.petName}
+                            // onChange={handleInputChange}
                         />
                     </div>
                     <div className="mt-4">
                         <TextInput
-                            icon={
-                                <FontAwesomeIcon
-                                    icon={faEnvelope}
-                                    className="h-5 w-5 text-gray-400"
-                                />
-                            }
+                            id="dob"
+                            name="dob"
+                            type="date"
+                            placeholder="date of birth"
+                            // value={data.dob}
+                            // onChange={handleInputChange}
                         />
                     </div>
-
-                    <div className="mt-4">
-                        <TextInput
-                            icon={
-                                <FontAwesomeIcon
-                                    icon={faLock}
-                                    className="h-5 w-5 text-gray-400"
-                                />
-                            }
-                        />
-                    </div>
-
-                    <div className="mt-4">
-                        <TextInput
-                            icon={
-                                <FontAwesomeIcon
-                                    icon={faLock}
-                                    className="h-5 w-5 text-gray-400"
-                                />
-                            }
-                        />
-                    </div>
-               
-
-                
+                    <RadioButtonsGroup
+                        name="gender"
+                        options={genderOptions}
+                    ></RadioButtonsGroup>
                 </div>
                 <div className="flex  gap-3 justify-start mt-4">
-                    <Link
-                        href={route("login")}
-                        className="underline lg:hidden md:hidden text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Already a member?
-                    </Link>
-                    <PrimaryButton
-                       
-                    >
-                        Register
-                    </PrimaryButton>
+                    <PrimaryButton type="submit">Save Pet</PrimaryButton>
                 </div>
             </form>
         </GuestLayout>
