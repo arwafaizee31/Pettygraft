@@ -156,8 +156,7 @@ class PetsController extends Controller
     public function ownerMyPets(){
         $user = Auth::user();
         $myPets = Pets::where('owner_id', $user->id)->get();
-        // return response()->json(['pets' => $myPets]);
-        return response()->json($myPets);
+        return response()->json(['pets' => $myPets]);
     }
 
 }

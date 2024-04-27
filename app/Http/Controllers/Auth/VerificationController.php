@@ -53,7 +53,7 @@ class VerificationController extends Controller
             case 2: // User role
                 return '/admin/dashboard';
                 break;
-            case 3: // Vendor role
+            case 3: // petowner role
                 return '/petowner/dashboard';
                 break;
             case 4: // Vendor role

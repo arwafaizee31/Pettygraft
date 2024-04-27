@@ -60,7 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/myPets', function () {
             return Inertia::render('PetOwner/MyPets');
         })->name('my-pets.owner');
-        // Route::get('/ownerMyPets', [PetsController::class, 'ownerMyPets'])->name('ownerMyPets');
+        Route::get('/ownerMyPets', [PetsController::class, 'ownerMyPets'])->name('ownerMyPets');
     });
     Route::group(['middleware' => ['vendor', 'verified'], 'prefix' => 'vendor'], function () {
 

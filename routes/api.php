@@ -30,4 +30,7 @@ Route::get('/allPets', [PetsController::class, 'allpets']);
 Route::get('/allVendors', [UserController::class, 'allVendors']);
 Route::get('/allVaccines', [VaccineController::class, 'allVaccines']);
 Route::get('/ownerMyPets', [PetsController::class, 'ownerMyPets']);
+
+
+// Route::middleware('auth:api')->get('/ownerMyPets', [PetsController::class, 'ownerMyPets']);
 Route::get('/UsersbyId/{Id}', [ProfileController::class, 'Users']);
