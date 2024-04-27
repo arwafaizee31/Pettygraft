@@ -37,7 +37,8 @@ class Pets extends Model
         return $this->belongsTo(User::class, 'owner_id', 'id');
     }
     public function vaccines()
-    {
-        return $this->belongsToMany(Vaccines::class, 'pet_vaccines');
-    }
+{
+    return $this->belongsToMany(Vaccines::class, 'pet_vaccines', 'pet_id', 'vaccine_id');
+}
+
 }
