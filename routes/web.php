@@ -71,6 +71,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/all-pets', function () {
             return Inertia::render('Vendor/AllPets');
         })->name('vendor-allpets');
+
+        Route::get('/vaccines', function () {
+            return Inertia::render('Vendor/VaccineListing');
+        })->name('vendor-vaccineListing');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -9,7 +9,7 @@ class VaccineController extends Controller
 {
     public function allVaccines()
     {
-        $vaccines = Vaccines::whereNull('deleted_at')->get(); // Assuming you have a Role model with the necessary fields
+        $vaccines = Vaccines::with('types')->where('is_approved' , 1)->where('deleted_at', null)->get(); // Assuming you have a Role model with the necessary fields
         return response()->json($vaccines);
     }
 }

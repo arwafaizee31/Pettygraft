@@ -13,7 +13,7 @@ export default function UserProfileCard({ updateImageRoute, imagePath, name , li
     useEffect(() => {
        setRole(roleId);
       
-        if(roleId = 4){
+        if(roleId == 4){
 
             setMessage("Welcome, user! Explore our platform to connect with pet owners, receive timely notifications for pet vaccinations, and enjoy a range of services. Your personalized dashboard provides comprehensive business analytics for your vaccines, ensuring you stay informed and efficient. Join us to streamline your services and enhance your pet vaccination business experience.");
            
