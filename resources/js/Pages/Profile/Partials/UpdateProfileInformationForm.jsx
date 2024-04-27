@@ -4,20 +4,118 @@ import PrimaryButton from '@/components/PrimaryButton';
 import ProfileTextInput from '@/components/ProfileTextInput';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
+import { Country, State, City } from 'country-state-city';
+import LocationSelector from '@/components/LocationSelector';
+import React, { useEffect, useState } from 'react';
+import {  getCountryName, getStateName} from '@/utils/utils';
+import ProfilePhonenumberInput from '@/components/ProfilePhonenumberInput';
 
 export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }) {
     const user = usePage().props.auth.user;
-    
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        fname: user.fname,
-        email: user.email,
-    });
+    const [countryOptions, setCountryOptions] = useState([]);
+    const [stateOptions, setStateOptions] = useState([]);
+    const [cityOptions, setCityOptions] = useState([]);
+    const [selectedCountry, setSelectedCountry] = useState('');
+    const [selectedState, setSelectedState] = useState('');
+    const [selectedCity, setSelectedCity] = useState('');
+    const [selectedCountryName, setSelectedCountryName] = useState('');
+    const [selectedStateName, setSelectedStateName] = useState('');
+    const [selectedCityName, setSelectedCityName] = useState('');
+    useEffect(() => {
+        // Fetch countries data
+        fetchCountries();
+    }, []);
 
-    const submit = (e) => {
-        e.preventDefault();
-
-        patch(route('profile.update'));
+    const fetchCountries = async () => {
+        try {
+            const countries = await Country.getAllCountries();
+            const options = countries.map(country => ({
+                label: country.name,
+                value: country.isoCode
+            }));
+            setCountryOptions(options);
+            setSelectedCountry(user.country); // Set the selected country code
+            setSelectedCountryName(getCountryName(user.country));
+        } catch (error) {
+            console.error('Error fetching countries:', error);
+        }
     };
+
+    useEffect(() => {
+        // Fetch states data based on the selected country
+        fetchStates(selectedCountry);
+    }, [selectedCountry]);
+
+    const fetchStates = async (countryCode) => {
+        try {
+            
+            const states = await State.getStatesOfCountry(countryCode);
+
+            const options = states.map(state => ({
+                label: state.name,
+                value: state.isoCode
+            }));
+            setStateOptions(options);
+            
+           
+                setSelectedState(user.state); // Set the selected state code
+            setSelectedStateName(await getStateName(selectedCountry, user.state)); 
+                // Log fetched cities // Select the first state by default if options are available
+         
+        } catch (error) {
+            console.error('Error fetching states:', error);
+        }
+    };
+    
+    useEffect(() => {
+        // Fetch cities data based on the selected state
+        fetchCities(selectedCountry, selectedState);
+    }, [selectedState,selectedCountry]);
+
+    const fetchCities = async (countryCode, stateCode) => {
+        try {
+            if (countryCode && stateCode) { // Check if countryCode and stateCode are not undefined
+                
+                const cities = await City.getCitiesOfState(countryCode, stateCode);
+                
+                const options = cities.map(city => ({
+                    label: city.name,
+                    value: city.name
+                }));
+               
+                setCityOptions(options);
+                setSelectedCity(user.city); // Set the selected city name
+                setSelectedCityName(user.city); 
+              
+            }
+        } catch (error) {
+            console.error('Error fetching cities:', error);
+        }
+    };
+    const { data, setData, put, errors, processing, recentlySuccessful } = useForm({
+        fname: user.fname,
+        lname: user.lname,
+        phone_no: user.phone_no,
+        country:user.country,
+        state: user.state,
+        city:user.city,
+        country_code:user.country_code,
+        email: user.email,
+       
+    });
+    const submit = (e) => {
+      
+        e.preventDefault();
+      
+        put(route("profile.update", { Id: user.id }), {
+           
+            // Pass user's ID as petId
+            preserveScroll: true,
+        });
+        
+    };
+    
+    
 
     return (
         <section className={className}>
@@ -31,7 +129,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="fname" value="fname" />
+                    <InputLabel htmlFor="fname" value="First Name" />
 
                     <ProfileTextInput
                         id="fname"
@@ -45,7 +143,39 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
                     <InputError className="mt-2" message={errors.fname} />
                 </div>
+                <div>
+                    <InputLabel htmlFor="lname" value="Last Name" />
+                    <ProfileTextInput
+                        id="lname"
+                        className="mt-1 block w-full"
+                        value={data.lname}
+                        onChange={(e) => setData('lname', e.target.value)}
+                        required
+                        isFocused
+                        autoComplete="lname"
+                    />
 
+                    <InputError className="mt-2" message={errors.lname} />
+                </div>
+                  <div>
+                <InputLabel htmlFor="" value="Contact Number" />
+                <ProfilePhonenumberInput
+                id="phone_no"
+                type="tel"
+                name="phone_no"
+                placeholder="Your Contact Number"
+                value={data.phone_no}
+                className="mt-1 block w-full"
+                autoComplete="phone_no"
+                countryCode={user.country_code}
+                onChange={(e) => setData('phone_no', e.target.value)}
+               setData={setData}
+               
+                required
+            />
+
+                   <InputError message={errors.phone_no} className="mt-2" />
+                </div>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
 
@@ -60,6 +190,50 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     />
 
                     <InputError className="mt-2" message={errors.email} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="" value="Country" />
+                    <LocationSelector
+                                options={countryOptions}
+                                onSelect={(selectedOption) => {
+                                    setSelectedCountry(selectedOption.value);
+                                    setData('country', selectedOption.value); // Update country value
+                                }}
+                                placeholder={selectedCountryName}
+                                value="{{ $formData['country'] ?? '' }}"
+                                name="country"
+                            />
+                            <InputError message={errors.country} className="mt-2" />
+                </div>
+              
+                <div>
+                    <InputLabel htmlFor="lname" value="State" />
+                    <LocationSelector
+                                options={stateOptions}
+                                onSelect={(selectedOption) => {
+                                    setSelectedState(selectedOption.value);
+                                    setData('state', selectedOption.value); // Update country value
+                                }}
+                                placeholder={selectedStateName}
+                                value="{{ $formData['state'] ?? '' }}"
+                                name="state"
+                            />
+                            <InputError message={errors.state} className="mt-2" />
+                </div>
+                <div>
+                    <InputLabel htmlFor="lname" value="City" />
+                    <LocationSelector
+                                options={cityOptions}
+                                onSelect={(selectedOption) => {
+                                    setSelectedCity(selectedOption.value);
+                                    setData('city', selectedOption.value); // Update country value
+                                }}
+                                placeholder={selectedCityName}
+                                value="{{ $formData['city'] ?? '' }}"
+                                name="city"
+                             
+                            />
+                            <InputError message={errors.city} className="mt-2" />
                 </div>
 
                 {mustVerifyEmail && user.email_verified_at === null && (

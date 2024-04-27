@@ -7,7 +7,7 @@ import SecondaryButton from '@/components/SecondaryButton';
 import ProfileTextInput from '@/components/ProfileTextInput';
 import { useForm } from '@inertiajs/react';
 
-export default function DeleteUserForm({ className = '' , users}) {
+export default function DeleteUserForm({ className = '' , users,usertype}) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
     const passwordInput = useRef();
     const userId = users.id;
@@ -29,7 +29,14 @@ export default function DeleteUserForm({ className = '' , users}) {
 
     const deleteUser = (e) => {
         e.preventDefault();
-        const routeUrl = route('petProfile.destroy', { id: userId });
+        let routeUrl ;
+        if(usertype == "user"){
+            routeUrl = route('profile.destroy', { id: userId });
+        }
+        else{
+            routeUrl = route('petProfile.destroy', { id: userId });
+        }
+       
 
         destroy(routeUrl, {
             preserveScroll: true,

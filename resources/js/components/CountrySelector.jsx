@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import Select from 'react-select';
 import * as countryData from 'countries-list'; // Import all exports from countries-list
 
@@ -20,10 +20,23 @@ const countryOptions = Object.keys(countryData.countries).map((code) => ({
 // Set default country to India
 const defaultCountry = countryOptions.find((option) => option.value === 'IN');
 export default defaultCountry;
-export function CountrySelector({ onSelect}) 
+
+export function CountrySelector({ onSelect ,countryFetchedCode}) 
 {
+    const [selectedCountryCode, setSelectedCountryCode] = useState(defaultCountry);
+  
+    useEffect(() => {
+        if (!countryFetchedCode) {
+           
+            setSelectedCountryCode(defaultCountry);
+        } else {
+            const FetchedCountry = countryOptions.find((option) => option.value === countryFetchedCode);
+            setSelectedCountryCode(FetchedCountry);
+        }
+    }, [countryFetchedCode, defaultCountry]);
     
-    const [selectedCountryCode, setSelectedCountryCode] = useState(defaultCountry); // Set default country
+    
+   // Set default country
   
     const handleChange = (selectedOption) => {
         setSelectedCountryCode(selectedOption);

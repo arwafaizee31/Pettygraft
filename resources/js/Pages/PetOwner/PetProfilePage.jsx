@@ -44,7 +44,7 @@ export default function PetProfilePage({ auth, mustVerifyEmail, status , pet }) 
                     </div>
 
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        <DeleteUserForm className="max-w-xl" users={pet}/>
+                        <DeleteUserForm className="max-w-xl" users={pet} usertype="pet"/>
                     </div>
                 </div>
             </div>

@@ -32,8 +32,8 @@ export const getStateName = async (countryCode, stateCode) => {
         if (state) {
             return state.name;
         } else {
-            console.error('Error: Invalid state code');
-            return 'Error: Invalid state code';
+            
+            return '';
         }
     } catch (error) {
         console.error('Error fetching states:', error);
