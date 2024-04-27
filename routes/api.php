@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PetsController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -28,3 +29,4 @@ Route::get('/petBreeds', [PetsController::class, 'getPetBreeds']);
 Route::get('/allPets', [PetsController::class, 'allpets']);
 Route::get('/allVendors', [UserController::class, 'allVendors']);
 Route::get('/allVaccines', [VaccineController::class, 'allVaccines']);
+Route::get('/UsersbyId/{Id}', [ProfileController::class, 'Users']);

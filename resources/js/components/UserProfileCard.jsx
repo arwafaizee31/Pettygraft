@@ -2,16 +2,28 @@ import React from "react";
 import PrimaryButton from "@/components/PrimaryButton";
 import { FormControl } from "@mui/material";
 import { useState, useEffect } from "react";
-export default function UserProfileCard({ updateImageRoute, imagePath, name ,link}) {
-    
-    
+export default function UserProfileCard({ updateImageRoute, imagePath, name , link ,roleId}) {
+
+    const [message, setMessage] = useState("");
+    const [role, setRole] = useState("");
     const csrfToken = document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
     const [image, setImage] = useState([]);
     useEffect(() => {
+       setRole(roleId);
+      
+        if(roleId = 4){
+
+            setMessage("Welcome, user! Explore our platform to connect with pet owners, receive timely notifications for pet vaccinations, and enjoy a range of services. Your personalized dashboard provides comprehensive business analytics for your vaccines, ensuring you stay informed and efficient. Join us to streamline your services and enhance your pet vaccination business experience.");
+           
+        }
+        else{
+            setMessage("Welcome pet parent! Get started by updating your profile,finding the perfect vaccination vendor, and managing your pet's data. We're here to make pet care a breeze.");
+        }
         setImage(`${imagePath}`);
     }, []);
+   
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         const formData = new FormData();
@@ -74,9 +86,7 @@ export default function UserProfileCard({ updateImageRoute, imagePath, name ,lin
                     </h5>
                 </a>
                 <p class="mb-3 font-normal">
-                    Welcome pet parent! Get started by updating your profile,
-                    finding the perfect vaccination vendor, and managing your
-                    pet's data. We're here to make pet care a breeze.
+                   {message}
                 </p>
                 <em class="mb-3   text-gray-200 dark:text-gray-400 font-bold">
                     Team PettyGrapht

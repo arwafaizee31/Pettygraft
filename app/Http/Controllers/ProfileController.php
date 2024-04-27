@@ -29,21 +29,21 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    
-     
-     
+
+
+
     /**
      * Delete the user's account.
      */
-   
-    public function destroy(Request $request,$id): RedirectResponse
+
+    public function destroy(Request $request, $id): RedirectResponse
     {
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);
 
         $user = User::findOrFail($id);
-       
+
         Auth::logout();
 
         $user->delete();
@@ -55,28 +55,45 @@ class ProfileController extends Controller
     }
     public function update(Request $request, $Id): RedirectResponse
     {
-        
+        $user = User::findOrFail($Id);
+        if($request->email == $user->email){
+            $validatedData = $request->validate([
+                'fname' => 'required|string|max:255',
+                'lname' => 'required|string|max:255',
+                'phone_no' => 'required|string|max:255',
+                'country' => 'required|string|max:255',
+                'state' => 'nullable|string|max:255',
+                'city' => 'nullable|string|max:255',
+                'country_code' => 'nullable|string|max:255',
+                'email' => 'required|string|lowercase|email|max:255',
+    
+            ]);
+        }
+        else{
+            $validatedData = $request->validate([
+                'fname' => 'required|string|max:255',
+                'lname' => 'required|string|max:255',
+                'phone_no' => 'required|string|max:255',
+                'country' => 'required|string|max:255',
+                'state' => 'nullable|string|max:255',
+                'city' => 'nullable|string|max:255',
+                'country_code' => 'nullable|string|max:255',
+                'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+    
+            ]);
+        }
 
         // Validate the request data
-        $validatedData = $request->validate([
-            'fname' => 'required|string',
-            'lname' => 'required|string',
-            'phone_no' => 'nullable|string',
-            'country' => 'nullable|string',
-            'state' => 'nullable|string',
-            'city' => 'nullable|string',
-            'country_code' => 'nullable|string',
-            'email' => 'required|email',
-        ]);
-       
+        
+
         // Find the pet by ID
         try {
             // Find the user by ID
             $user = User::findOrFail($Id);
-    
+
             // Update the user's data
             $user->update($validatedData);
-    
+
             // Return a response indicating success
             return redirect()->back()->with('success', 'Profile updated successfully.');
         } catch (\Exception $e) {
@@ -111,4 +128,5 @@ class ProfileController extends Controller
         // Redirect back to the pet profile page
         return redirect()->back();
     }
+    
 }
