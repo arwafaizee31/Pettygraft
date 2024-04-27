@@ -16,10 +16,10 @@ export default function Edit({ auth, mustVerifyEmail, status }) {
             try {
                 const response = await axios.get(`api/UsersbyId/${auth.user.id}`);
                 const userRoles = response.data;
-             console.log(userRoles);
+            
                 
                 setRoleId(userRoles  ? userRoles : null);
-               
+                
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching user roles:", error);
@@ -29,7 +29,7 @@ export default function Edit({ auth, mustVerifyEmail, status }) {
     
         fetchUserRole();
     }, [auth.user.id]);
-  
+  console.log(RoleId);
     useEffect(() => {
         if (!loading) {
             if (RoleId === 4) {

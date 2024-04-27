@@ -30,3 +30,4 @@ Route::get('/allPets', [PetsController::class, 'allpets']);
 Route::get('/allVendors', [UserController::class, 'allVendors']);
 Route::get('/allVaccines', [VaccineController::class, 'allVaccines']);
 Route::get('/UsersbyId/{Id}', [ProfileController::class, 'Users']);
+Route::get('/privatePets/{Id}', [PetsController::class, 'privatePets']);
