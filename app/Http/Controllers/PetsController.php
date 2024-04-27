@@ -23,7 +23,7 @@ class PetsController extends Controller
     public function show($id)
     {
         // Fetch the pet details by ID
-        $pet = Pets::with('breeds','types','owner')->findOrFail($id);
+        $pet = Pets::with('breeds','types','owner','vaccines')->findOrFail($id);
 
         // Pass the pet details to the Inertia view
         return Inertia::render('PetOwner/PetProfilePage', [
@@ -122,7 +122,8 @@ class PetsController extends Controller
             'last_vaccine_date'=> 'required|date',
             'type_id' => 'required',
             'breed' => 'required',
-            'gender' => 'required', // Ensure the vendor ID exists in the users table
+            'gender' => 'required',
+            'vaccine_ids' => 'array', // Ensure the vendor ID exists in the users table
         ]);
        
         // Find the pet by ID
@@ -137,7 +138,9 @@ class PetsController extends Controller
             $pet->breed = $validatedData['breed'];
             $pet->gender = $validatedData['gender'];
             $pet->save();
-      
+            if (isset($validatedData['vaccine_ids'])) {
+                $pet->vaccines()->sync($validatedData['vaccine_ids']);
+            }
         // Return a response indicating success
         return Redirect::back();
     }

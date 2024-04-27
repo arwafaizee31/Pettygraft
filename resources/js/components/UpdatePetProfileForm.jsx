@@ -24,10 +24,52 @@ export default function UpdatePetProfileForm({
     const [genderOptions, setGenderOptions] = useState([]);
     const [selectedGender, setSelectedGender] = useState("");
     const [selectedGenderName, setSelectedGenderName] = useState("");
-    
-    const [Vaccines, setVaccines] = useState([]);
     const [selectedVaccines, setSelectedVaccines] = useState([]);
-
+    const [Vaccines, setVaccines] = useState([]);
+   
+    const [selectedVaccineIds, setSelectedVaccineIds] = useState([]);
+    useEffect(() => {
+        fetch("/api/allVaccines")
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Vaccines data:", data); // Log the fetched data
+                const options = data.map((vaccine) => ({
+                    label: vaccine.vaccine_name,
+                    value: vaccine.id,
+                }));
+    
+                // Log the transformed options
+                console.log("Vaccine options:", options);
+    
+                setVaccines(options);
+    
+                // Check if user.vaccines is defined and not null
+                if (user.vaccines) {
+                    const initialSelectedVaccineIds = user.vaccines.map((vaccine) => vaccine.id);
+    
+                    setSelectedVaccineIds(initialSelectedVaccineIds);
+                    setSelectedVaccines(initialSelectedVaccineIds);
+                   
+                    setData("vaccine_ids", initialSelectedVaccineIds);
+                } else {
+                    console.log("User vaccines are null or undefined.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching vaccines:", error);
+            });
+    }, []);
+    
+    // Now, you can access the updated state values here
+   
+    
+    
+    const handleVaccineChange = (selectedVaccines) => {
+        setSelectedVaccineIds(selectedVaccines);
+        setData("vaccine_ids", selectedVaccines);
+        // Update vaccine IDs in your form data
+        // For example: setData("vaccine_ids", selectedVaccines);
+    };
     useEffect(() => {
         // Fetch roles data from your API endpoint
         fetch("/api/petTypes")
@@ -101,24 +143,12 @@ export default function UpdatePetProfileForm({
                 console.error("Error fetching gender options:", error);
             });
     }, []);
-    useEffect(() => {
-        // Fetch roles data from your API endpoint
-        fetch("/api/allVaccines")
-            .then((response) => response.json())
-            .then((data) => {
-                const options = data.map((vaccine) => ({
-                    label: vaccine.vaccine_name,
-                    value: vaccine.id,
-                }));
-
-                setVaccines(options);
-
-                // Set roles data in state
-            })
-            .catch((error) => {
-                console.error("Error fetching pettypes:", error);
-            });
-    }, []);
+   
+    
+    
+    
+    
+    
     const { data, setData, put, errors, processing, recentlySuccessful } =
         useForm({
             pet_name: user.pet_name,
@@ -127,18 +157,17 @@ export default function UpdatePetProfileForm({
             type_id: user.type_id,
             breed: user.breed,
             gender: user.gender,
-            vaccines: selectedVaccines,
-            
+            vaccine_ids: selectedVaccines
         });
-
-    const submit = (e) => {
-        e.preventDefault();
-        put(route("update-pet-profile", { petId: user.id }), { // Pass user's ID as petId
-            preserveScroll: true,
-         
-        });
-        console.log(data);
        
+    const submit = (e) => {
+        console.log(data);
+        e.preventDefault();
+        put(route("update-pet-profile", { petId: user.id }), {
+            // Pass user's ID as petId
+            preserveScroll: true,
+        });
+        
     };
 
     return (
@@ -254,12 +283,12 @@ export default function UpdatePetProfileForm({
 
                 <div>
                     <MultipleSelect
-                        options={Vaccines}
-                        label={"Vaccinations Applied"}
-                        selectedVaccines={selectedVaccines}
-                        setSelectedVaccines={setSelectedVaccines}
+                        options={Vaccines} // Pass your vaccine options here
+                        label="Select Vaccines"
+                        selectedValues={selectedVaccineIds}
+                        setSelectedValues={handleVaccineChange}
                     />
-                    <InputError className="mt-2" message={errors.vaccines} />
+                    <InputError className="mt-2" message={errors.vaccine_ids} />
                 </div>
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>

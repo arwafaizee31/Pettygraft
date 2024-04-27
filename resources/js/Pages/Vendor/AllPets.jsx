@@ -40,7 +40,7 @@ export default function AllPets({ auth }) {
     };
     
     const petFields = ['Name', 'Owner Name',  'Date of birth', 'Gender','Last Vaccination Date','Contact no.','Location','Action'];
-    const petDataFields = ['pet_name', 'owner_id', 'd_o_b', 'last_vaccine_date','pet_contact','pet_location','gender','Action'];
+    const petDataFields = ['pet_name', 'owner_id', 'd_o_b', 'gender','last_vaccine_date','pet_contact','pet_location','Action'];
     const formatPetsData = (pets, petDataFields) => {   
         const formatDate = (dateString) => {
             const date = new Date(dateString);

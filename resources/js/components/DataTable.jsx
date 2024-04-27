@@ -13,7 +13,6 @@ import PetProfileCard from '@/components/PetProfileCard'; // Import PetProfileCa
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { useEffect, useState } from 'react';
 
-
 const defaultTheme = createTheme();
 const theme = createTheme({
   components: {
@@ -43,8 +42,9 @@ export default function DataTable({ tableData, fields, mainfields, options }) {
   const [genderOptions, setGenderOptions] = useState([]);
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedGenderName, setSelectedGenderName] = useState("");
+  
   useEffect(() => {
-    // Fetch roles data from your API endpoint
+    // Fetch gender options from your API endpoint
     fetch("/api/petsGender")
         .then((response) => response.json())
         .then((data) => {
@@ -53,15 +53,13 @@ export default function DataTable({ tableData, fields, mainfields, options }) {
                 label: value,
             }));
             setGenderOptions(options);
-             setSelectedGender(options[petGender - 1].value);
-            setSelectedGenderName(options[petGender - 1].label);
-           
-            // Set roles data in state
+            // Set gender data in state
         })
         .catch((error) => {
             console.error("Error fetching petgender:", error);
         });
-}, []);
+  }, []);
+
   React.useEffect(() => {
     if (fields.length > 0) {
       const formattedColumns = fields.map(field => ({
@@ -146,14 +144,17 @@ export default function DataTable({ tableData, fields, mainfields, options }) {
                           <em>{row['pet_city']},{row['pet_state']}</em>
                         </div>
                       )}
-                     
-                     
+                      {/* Render other fields normally */}
+                      {columnMain.id === 'gender' && (
+                        <div>
+                          {genderOptions.find(option => option.value === row[columnMain.id])?.label}
+                        </div>
+                      )}
                       {/* Render action buttons if the column is 'Action' */}
                       {columnMain.id === 'Action' && (
                         <DataTableActions options={options} />
                       )}
-                      {/* Render other fields normally */}
-                      {columnMain.id !== ('pet_name'||'pet_location' || 'gender') && row[columnMain.id]}
+                      {columnMain.id !== 'pet_name' && columnMain.id !== 'pet_location' && columnMain.id !== 'gender' && row[columnMain.id]}
                     </TableCell>
                   ))}
                 </TableRow>
