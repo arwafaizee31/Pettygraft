@@ -9,8 +9,6 @@ export default function AllPets({ auth }) {
     const [pets, setPets] = useState([]);
     const [petStates, setPetStates] = useState({});
    
-    
-   
     useEffect(() => {
         // Fetch pets data from your API endpoint
         fetch('/api/allPets') 

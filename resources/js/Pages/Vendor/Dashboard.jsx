@@ -120,6 +120,7 @@ const formatPetsData = (pets, petDataFields) => {
         const formattedDate = date.toLocaleDateString('en-US', options);
 
         // Convert day to the desired format (e.g., 19th, 1st, etc.)
+        
         const day = date.getDate();
         let daySuffix = '';
         switch (day) {

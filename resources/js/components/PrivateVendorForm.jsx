@@ -7,7 +7,7 @@ import { useForm } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import LocationSelector from "@/components/LocationSelector";
-import axios from 'axios';
+
 
 export default function PrivateVendorForm({ className = "", users }) {
     const user = users;
