@@ -29,7 +29,7 @@ export default function MultipleSelect({
     const theme = useTheme();
     const [selectedItems, setSelectedItems] = useState(selectedValues);
     const [selectedLabels, setSelectedLabels] = useState([]);
-
+    
     useEffect(() => {
         setSelectedItems(selectedValues);
         setSelectedLabels(selectedValues.map(selectedValue => {

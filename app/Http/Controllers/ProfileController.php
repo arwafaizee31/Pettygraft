@@ -7,6 +7,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -127,6 +129,17 @@ class ProfileController extends Controller
 
         // Redirect back to the pet profile page
         return redirect()->back();
+    }
+    public function Users($id)
+    {
+        // Fetch the user by ID with eager loaded roles
+        $user = User::with('roles')->findOrFail($id);
+
+        // Extract the first role ID from the user's roles
+        $firstRoleId = $user->roles->first()->id ?? null;
+
+        // Return the first role ID
+        return response()->json($firstRoleId);
     }
     
 }

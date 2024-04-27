@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\VaccineController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -76,6 +77,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/vaccines', function () {
             return Inertia::render('Vendor/VaccineListing');
         })->name('vendor-vaccineListing');
+
+        Route::get('/vaccineAddition', function () {
+            return Inertia::render('Vendor/VaccineAdditionForm');
+        })->name('vaccineAdditionForm');
+        Route::post('/vaccineAddition/{Id}', [VaccineController::class, 'addVaccine'])->name('vaccineAddition');
+        
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

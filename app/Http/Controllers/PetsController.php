@@ -7,37 +7,38 @@ use App\Models\PetBreeds;
 
 use Illuminate\Http\Request;
 use App\Models\Pets;
-use Illuminate\Foundation\Auth\User;
+use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
+
 
 class PetsController extends Controller
 {
     //
     public function allpets()
     {
-        $pets = Pets::with('breeds', 'owner')->where('deleted_at', null)->get(); // Assuming you have a Role model with the necessary fields
+        $pets = Pets::with('breeds', 'owner')->where('deleted_at', null)->where('is_private', 0)->where('permanent_vendor_id', null)->get(); // Assuming you have a Role model with the necessary fields
         return response()->json($pets);
     }
     public function show($id)
     {
         // Fetch the pet details by ID
-        $pet = Pets::with('breeds','types','owner','vaccines')->findOrFail($id);
-    
+        $pet = Pets::with('breeds', 'types', 'owner', 'vaccines')->findOrFail($id);
+
         // Check if the authenticated user is the owner of the pet
         if ($pet->owner_id !== auth()->id()) {
             // If not the owner, return a forbidden response
             abort(403, 'Unauthorized action.');
         }
-    
+
         // Pass the pet details to the Inertia view
         return Inertia::render('PetOwner/PetProfilePage', [
             'pet' => $pet,
         ]);
     }
-    
+
     public function getPetGender()
     {
         $pet_gender = config('variables.petGender');
@@ -125,31 +126,31 @@ class PetsController extends Controller
 
         // Validate the request data
         $validatedData = $request->validate([
-          
-            'pet_name'=> 'required|string',
+
+            'pet_name' => 'required|string',
             'd_o_b' => 'required|date',
-            'last_vaccine_date'=> 'required|date',
+            'last_vaccine_date' => 'required|date',
             'type_id' => 'required',
             'breed' => 'required',
             'gender' => 'required',
             'vaccine_ids' => 'array', // Ensure the vendor ID exists in the users table
         ]);
-       
+
         // Find the pet by ID
         $pet = Pets::findOrFail($petId);
 
         // Update the pet's permanent vendor ID
-       
-            $pet->pet_name = $validatedData['pet_name'];
-            $pet->d_o_b = $validatedData['d_o_b'];
-            $pet->last_vaccine_date = $validatedData['last_vaccine_date'];
-            $pet->type_id = $validatedData['type_id'];
-            $pet->breed = $validatedData['breed'];
-            $pet->gender = $validatedData['gender'];
-            $pet->save();
-            if (isset($validatedData['vaccine_ids'])) {
-                $pet->vaccines()->sync($validatedData['vaccine_ids']);
-            }
+
+        $pet->pet_name = $validatedData['pet_name'];
+        $pet->d_o_b = $validatedData['d_o_b'];
+        $pet->last_vaccine_date = $validatedData['last_vaccine_date'];
+        $pet->type_id = $validatedData['type_id'];
+        $pet->breed = $validatedData['breed'];
+        $pet->gender = $validatedData['gender'];
+        $pet->save();
+        if (isset($validatedData['vaccine_ids'])) {
+            $pet->vaccines()->sync($validatedData['vaccine_ids']);
+        }
         // Return a response indicating success
         return Redirect::back();
     }
@@ -159,4 +160,10 @@ class PetsController extends Controller
         return response()->json(['pets' => $myPets]);
     }
 
+    public function privatePets($Id)
+    {
+        $pets = Pets::with('breeds', 'owner')->where('deleted_at', null)->where('is_private',1)->where('permanent_vendor_id', $Id )->get();
+         // Assuming you have a Role model with the necessary fields
+        return response()->json($pets);
+}
 }
