@@ -56,6 +56,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/privateVendor/{petId}/update', [PetsController::class, 'privateVendorUpdate'])->name('privateVendor.update');
         Route::post('/update-pet-image/{petId}', [PetsController::class, 'updatePetImage'])->name('update-pet-image');
         Route::put('/update-pet-profile/{petId}', [PetsController::class, 'updatePetProfile'])->name('update-pet-profile');
+        
+        Route::get('/myPets', function () {
+            return Inertia::render('PetOwner/MyPets');
+        })->name('my-pets.owner');
     });
     Route::group(['middleware' => ['vendor', 'verified'], 'prefix' => 'vendor'], function () {
 

@@ -137,12 +137,9 @@ class PetsController extends Controller
             $pet->breed = $validatedData['breed'];
             $pet->gender = $validatedData['gender'];
             $pet->save();
-        
-         
-        
-
-
+      
         // Return a response indicating success
         return Redirect::back();
     }
+
 }
