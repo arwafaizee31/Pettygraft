@@ -7,6 +7,7 @@ use App\Models\PetBreeds;
 
 use Illuminate\Http\Request;
 use App\Models\Pets;
+use Illuminate\Foundation\Auth\User;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -24,12 +25,19 @@ class PetsController extends Controller
     {
         // Fetch the pet details by ID
         $pet = Pets::with('breeds','types','owner','vaccines')->findOrFail($id);
-
+    
+        // Check if the authenticated user is the owner of the pet
+        if ($pet->owner_id !== auth()->id()) {
+            // If not the owner, return a forbidden response
+            abort(403, 'Unauthorized action.');
+        }
+    
         // Pass the pet details to the Inertia view
         return Inertia::render('PetOwner/PetProfilePage', [
             'pet' => $pet,
         ]);
     }
+    
     public function getPetGender()
     {
         $pet_gender = config('variables.petGender');
@@ -113,6 +121,7 @@ class PetsController extends Controller
     }
     public function updatePetProfile(Request $request, $petId): RedirectResponse
     {
+
 
         // Validate the request data
         $validatedData = $request->validate([

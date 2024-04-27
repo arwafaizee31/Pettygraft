@@ -161,7 +161,7 @@ export default function UpdatePetProfileForm({
         });
        
     const submit = (e) => {
-        console.log(data);
+      
         e.preventDefault();
         put(route("update-pet-profile", { petId: user.id }), {
             // Pass user's ID as petId

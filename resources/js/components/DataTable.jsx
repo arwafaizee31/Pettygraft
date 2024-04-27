@@ -150,11 +150,20 @@ export default function DataTable({ tableData, fields, mainfields, options }) {
                           {genderOptions.find(option => option.value === row[columnMain.id])?.label}
                         </div>
                       )}
+                       {columnMain.id === 'pet_type_id' && (
+                         <img
+                         src={row['pet_type_id'] === 1 ? '/dogtable.png' : '/cattable.png'}
+                         alt=""
+                         height={50}
+                         width={50}
+                         className="border border-gray-900 rounded-full"
+                       />
+                      )}
                       {/* Render action buttons if the column is 'Action' */}
                       {columnMain.id === 'Action' && (
                         <DataTableActions options={options} />
                       )}
-                      {columnMain.id !== 'pet_name' && columnMain.id !== 'pet_location' && columnMain.id !== 'gender' && row[columnMain.id]}
+                      {columnMain.id !== 'pet_name' && columnMain.id !== 'pet_location' && columnMain.id !== 'gender' && columnMain.id !== 'pet_type_id' && row[columnMain.id]}
                     </TableCell>
                   ))}
                 </TableRow>
