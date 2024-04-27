@@ -28,3 +28,4 @@ Route::get('/petBreeds', [PetsController::class, 'getPetBreeds']);
 Route::get('/allPets', [PetsController::class, 'allpets']);
 Route::get('/allVendors', [UserController::class, 'allVendors']);
 Route::get('/allVaccines', [VaccineController::class, 'allVaccines']);
+Route::get('/ownerMyPets', [PetsController::class, 'ownerMyPets']);
