@@ -6,6 +6,7 @@ import axios from "axios"; // Import axios for making HTTP requests
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import PrimaryButton from "@/components/PrimaryButton";
+import { Head } from "@inertiajs/react";
 
 export default function MyPets({ auth, link }) {
     const [ownerMyPets, setownerMyPets] = useState([]);
@@ -22,6 +23,7 @@ export default function MyPets({ auth, link }) {
     return (
         <>
             <NavBar></NavBar>
+            <Head title="My Pets" />
             <div className="text-5xl myPetsHeading">
                 <strong>My Pets </strong>
             </div>
