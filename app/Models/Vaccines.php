@@ -26,4 +26,8 @@ class Vaccines extends Model
     {
         return $this->belongsTo(PetTypes::class, 'pet_type_id', 'id');
     }
+    public function custompets()
+    {
+        return $this->belongsToMany(CustomPets::class, 'custom_pet_vaccines');
+    }
 }
