@@ -94,6 +94,9 @@ export default function UserProfileCard({ updateImageRoute, imagePath, name , li
                 <div class="mt-4">
                     <PrimaryButton link={link}>Go to Dashboard</PrimaryButton>
                 </div>
+                <div class="mt-4">
+                    <PrimaryButton link={link}>Logout</PrimaryButton>
+                </div>
             </div>
         </div>
     );

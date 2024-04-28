@@ -48,7 +48,7 @@ export default function NavBar() {
         );
     };
     return (
-        <div className="fixed w-full  z-1 top-0 shadow-2xl">
+        <div className="fixed w-full  z-50 top-0 shadow-2xl">
             <nav
                 className={`h-12 sm:h-28 flex bg-white ${
                     showNav1 ? "" : "hidden"

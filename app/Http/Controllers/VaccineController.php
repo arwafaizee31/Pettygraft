@@ -50,4 +50,5 @@ class VaccineController extends Controller
         // Redirect back with success message
         return redirect()->back()->with('success', 'Vaccine added successfully.Kindly wait for it to be approved by PettyGrapht');
     }
+    
 }
