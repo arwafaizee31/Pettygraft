@@ -114,7 +114,15 @@ export default function Dashboard({ auth }) {
     const fetchPetStates = async (petsData) => {
         const states = {};
         for (const pet of petsData) {
-            const stateName = await getStateName(pet.owner.country, pet.owner.state);
+            let country = pet.country; // Default to owner's country
+            let state= pet.state;
+            if (pet.hasOwnProperty('is_private') && pet.is_private) {
+                // If pet is private, use pet's country
+                country = pet.owner.country;
+                state = pet.owner.state;
+            }
+    
+            const stateName = await getStateName(country, state);
             states[pet.id] = stateName;
         }
         setPetStates(states);
@@ -179,9 +187,11 @@ export default function Dashboard({ auth }) {
             formattedPet['type_id'] = pet.type_id;
             formattedPet['breed'] = pet.breeds.breed_display_name;
             formattedPet['pet_contact'] = "+" + getDialingCode(pet.owner.country_code) +" "+ pet.owner.phone_no;
-            formattedPet['pet_country'] = getCountryName(pet.owner.country);
+            formattedPet['pet_country'] = pet.hasOwnProperty('is_private') ? getCountryName(pet.owner.country) : getCountryName(pet.country);
+            
             formattedPet['pet_state'] = petStates[pet.id] || 'Fetching...'; 
-            formattedPet['pet_city'] = pet.owner.city;
+            formattedPet['pet_city'] = pet.hasOwnProperty('is_private') ?  pet.owner.city : pet.city;
+           
             formattedPet['pet_email'] = pet.owner.email;
             formattedPet['age'] = ageCalculation(pet.d_o_b);
             formattedPet['is_private'] = pet.hasOwnProperty('is_private') ? pet.is_private : false;
