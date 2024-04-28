@@ -127,7 +127,7 @@ export default function AllPets({ auth }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="">
-                        <DataTable tableData={formattedPets} fields={petFields} mainfields={petDataFields} options={['view']}/>
+                        <DataTable tableData={formattedPets} fields={petFields} mainfields={petDataFields} options={['view']} title="All Pets"/>
                     </div>
                 </div>
             </div>
