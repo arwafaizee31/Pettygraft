@@ -236,7 +236,7 @@ const formattedPets = formatPetsData(pets, petDataFields);
                             </Grid>
                             <Grid item md={8} xs={12}>
                                 <div className="">
-                                <DataTable tableData={formattedPets} fields={petFields} mainfields={petDataFields} options={['view']}/>
+                                <DataTable tableData={formattedPets} fields={petFields} mainfields={petDataFields} options={['view']} title="Personalized Pets"/>
                                 </div>
                             </Grid>
                             <Grid item md={4} xs={12}>

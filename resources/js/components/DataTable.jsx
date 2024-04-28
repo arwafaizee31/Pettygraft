@@ -106,7 +106,7 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
                 <h2 class="text-4xl ms-4">{title}</h2>
                 {headerButton && (
                  <div class="me-4">
-                    <PrimaryButton link="vendor/vaccineAddition">Add</PrimaryButton>
+                    <PrimaryButton link="vaccineAddition">Add</PrimaryButton>
                     </div>
                 )}
             </div>
