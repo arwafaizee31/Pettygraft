@@ -30,14 +30,14 @@ export default function VaccineListing({ auth }) {
         "Pet Type",
         "Minimum Age",
         "Maximum Age",
-        "Action",
+        
     ];
     const vaccineDataFields = [
         "vaccine_name",
         "pet_type_id",
         "min_age",
         "max_age",
-        "Action",
+        
     ];
     const formatvaccinesData = (vaccines, vaccineDataFields) => {
        const formatAge = (age) =>{
@@ -67,7 +67,7 @@ export default function VaccineListing({ auth }) {
                 </h2>
             }
         >
-            <Head title="All Pets" />
+            <Head title="All Vaccines" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="">
@@ -75,7 +75,8 @@ export default function VaccineListing({ auth }) {
                             tableData={formattedVaccines}
                             fields={vaccineFields}
                             mainfields={vaccineDataFields}
-                            options={["add"]}
+                            headerButton={true}
+                            title="All Vaccines"
                         />
                     </div>
                 </div>

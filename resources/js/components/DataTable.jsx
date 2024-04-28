@@ -12,6 +12,8 @@ import Tooltip from "@mui/material/Tooltip"; // Import Tooltip component
 import PetProfileCard from "@/components/PetProfileCard"; // Import PetProfileCard component
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
+import PrimaryButton from "./PrimaryButton";
+import { Margin } from "@mui/icons-material";
 
 const defaultTheme = createTheme();
 const theme = createTheme({
@@ -37,7 +39,7 @@ const CustomTooltip = styled(({ className, ...props }) => (
     background-color: white;
    
 `);
-export default function DataTable({ tableData, fields, mainfields, options }) {
+export default function DataTable({ tableData, fields, mainfields, options,headerButton,title }) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [columns, setColumns] = React.useState([]);
@@ -70,6 +72,7 @@ export default function DataTable({ tableData, fields, mainfields, options }) {
                 label: field.charAt(0).toUpperCase() + field.slice(1), // Capitalize first letter
                 minWidth: 170,
                 align: "left",
+                style: { marginLeft: '20px' }
             }));
             setColumns(formattedColumns);
         }
@@ -92,12 +95,22 @@ export default function DataTable({ tableData, fields, mainfields, options }) {
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target.value);
+        setRowsPerPage(+event.target. value);
         setPage(0);
     };
 
     return (
+     
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }} class="mt-5">
+                <h2 class="text-4xl ms-4">{title}</h2>
+                {headerButton && (
+                 <div class="me-4">
+                    <PrimaryButton link="vendor/vaccineAddition">Add</PrimaryButton>
+                    </div>
+                )}
+            </div>
+    
             <TableContainer sx={{ maxHeight: 440 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
