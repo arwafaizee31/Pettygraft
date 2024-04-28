@@ -81,7 +81,10 @@
 #join{
   display: inline-block;
 }
+.modal_pet_name_edited{
+  font-family: cursive;
 
+}
 
 
 

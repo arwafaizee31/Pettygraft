@@ -228,5 +228,16 @@ public function customPets($Id)
      // Assuming you have a Role model with the necessary fields
     return response()->json($pets);
 }
+public function showPetDetails($id)
+    {
+        $pet = Pets::with('breeds', 'types', 'owner', 'vaccines')->findOrFail($id);
+        $petTypeDisplayName = $pet->types->pet_type_display_name;
+        $breedDisplayName = $pet->breeds->breed_display_name;
+        
+        // Add the pet type display name and breed display name to the pet attributes
+        $pet->pet_type_display_name = $petTypeDisplayName;
+        $pet->breed_display_name = $breedDisplayName;
+        return Inertia::render('Vendor/PetDetails', ['pet' => $pet]);
+    }
 
 }

@@ -86,7 +86,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return Inertia::render('Vendor/CustomPetAdditionForm');
         })->name('customPetAddition');
         Route::post('/customPetAddition/{Id}', [PetsController::class, 'addCustomPet'])->name('customPetAddition.save');
-        
+        Route::get('/petDetails/{id}', [PetsController::class, 'showPetDetails'])->name('pet-details-page');
+
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
