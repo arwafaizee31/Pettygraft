@@ -53,10 +53,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         })->name('PetRegistration');
 
         Route::get('/petProfilePage/{id}', [PetsController::class, 'show'])->name('petOwner-PetProfilePage');
-        Route::delete('/petProfile/{id}', [PetsController::class, 'destroy'])->name('petProfile.destroy');
+       
         Route::put('/privateVendor/{petId}/update', [PetsController::class, 'privateVendorUpdate'])->name('privateVendor.update');
         Route::post('/update-pet-image/{petId}', [PetsController::class, 'updatePetImage'])->name('update-pet-image');
-        Route::put('/update-pet-profile/{petId}', [PetsController::class, 'updatePetProfile'])->name('update-pet-profile');
+       
         
         Route::get('/myPets', function () {
             return Inertia::render('PetOwner/MyPets');
@@ -86,6 +86,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return Inertia::render('Vendor/CustomPetAdditionForm');
         })->name('customPetAddition');
         Route::post('/customPetAddition/{Id}', [PetsController::class, 'addCustomPet'])->name('customPetAddition.save');
+        Route::get('/custompetProfilePage/{id}', [PetsController::class, 'show'])->name('customPetProfilePage');
+       
         
     });
 
@@ -93,6 +95,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/profile/{Id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/{Id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/update-user-image/{Id}', [ProfileController::class, 'updateUserImage'])->name('update-user-image');
+    Route::delete('/petProfile/{id}', [PetsController::class, 'destroy'])->name('petProfile.destroy');
+    Route::put('/update-pet-profile/{petId}', [PetsController::class, 'updatePetProfile'])->name('update-pet-profile');
 });
 
 require __DIR__ . '/auth.php';

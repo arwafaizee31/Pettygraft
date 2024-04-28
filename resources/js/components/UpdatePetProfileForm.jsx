@@ -7,12 +7,17 @@ import { useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
 import LocationSelector from "@/components/LocationSelector";
 import MultipleSelect from "@/components/MultipleSelect";
+import ProfilePhonenumberInput from "@/components/ProfilePhonenumberInput";
+import { Country, State, City } from 'country-state-city';
+import {  getCountryName, getStateName} from '@/utils/utils';
+
 import axios from "axios";
 export default function UpdatePetProfileForm({
     mustVerifyEmail,
     status,
     className = "",
     users,
+    roleid,
 }) {
     const user = users;
     const [petTypes, setPetTypes] = useState([]);
@@ -26,7 +31,88 @@ export default function UpdatePetProfileForm({
     const [selectedGenderName, setSelectedGenderName] = useState("");
     const [selectedVaccines, setSelectedVaccines] = useState([]);
     const [Vaccines, setVaccines] = useState([]);
-   
+
+    const [countryOptions, setCountryOptions] = useState([]);
+    const [stateOptions, setStateOptions] = useState([]);
+    const [cityOptions, setCityOptions] = useState([]);
+    const [selectedCountry, setSelectedCountry] = useState('');
+    const [selectedState, setSelectedState] = useState('');
+    const [selectedCity, setSelectedCity] = useState('');
+    const [selectedCountryName, setSelectedCountryName] = useState('');
+    const [selectedStateName, setSelectedStateName] = useState('');
+    const [selectedCityName, setSelectedCityName] = useState('');
+    useEffect(() => {
+        // Fetch countries data
+        fetchCountries();
+    }, []);
+
+    const fetchCountries = async () => {
+        try {
+            const countries = await Country.getAllCountries();
+            const options = countries.map(country => ({
+                label: country.name,
+                value: country.isoCode
+            }));
+            setCountryOptions(options);
+            setSelectedCountry(user.country); // Set the selected country code
+            setSelectedCountryName(getCountryName(user.country));
+        } catch (error) {
+            console.error('Error fetching countries:', error);
+        }
+    };
+
+    useEffect(() => {
+        // Fetch states data based on the selected country
+        fetchStates(selectedCountry);
+    }, [selectedCountry]);
+
+    const fetchStates = async (countryCode) => {
+        try {
+            
+            const states = await State.getStatesOfCountry(countryCode);
+
+            const options = states.map(state => ({
+                label: state.name,
+                value: state.isoCode
+            }));
+            setStateOptions(options);
+            
+           
+                setSelectedState(user.state); // Set the selected state code
+            setSelectedStateName(await getStateName(selectedCountry, user.state)); 
+                // Log fetched cities // Select the first state by default if options are available
+         
+        } catch (error) {
+            console.error('Error fetching states:', error);
+        }
+    };
+    
+    useEffect(() => {
+        // Fetch cities data based on the selected state
+        fetchCities(selectedCountry, selectedState);
+    }, [selectedState,selectedCountry]);
+
+    const fetchCities = async (countryCode, stateCode) => {
+        try {
+            if (countryCode && stateCode) { // Check if countryCode and stateCode are not undefined
+                
+                const cities = await City.getCitiesOfState(countryCode, stateCode);
+                
+                const options = cities.map(city => ({
+                    label: city.name,
+                    value: city.name
+                }));
+               
+                setCityOptions(options);
+                setSelectedCity(user.city); // Set the selected city name
+                setSelectedCityName(user.city); 
+              
+            }
+        } catch (error) {
+            console.error('Error fetching cities:', error);
+        }
+    };
+
     const [selectedVaccineIds, setSelectedVaccineIds] = useState([]);
     useEffect(() => {
         fetch("/api/allVaccines")
@@ -37,19 +123,21 @@ export default function UpdatePetProfileForm({
                     label: vaccine.vaccine_name,
                     value: vaccine.id,
                 }));
-    
+
                 // Log the transformed options
                 console.log("Vaccine options:", options);
-    
+
                 setVaccines(options);
-    
+
                 // Check if user.vaccines is defined and not null
                 if (user.vaccines) {
-                    const initialSelectedVaccineIds = user.vaccines.map((vaccine) => vaccine.id);
-    
+                    const initialSelectedVaccineIds = user.vaccines.map(
+                        (vaccine) => vaccine.id
+                    );
+
                     setSelectedVaccineIds(initialSelectedVaccineIds);
                     setSelectedVaccines(initialSelectedVaccineIds);
-                   
+
                     setData("vaccine_ids", initialSelectedVaccineIds);
                 } else {
                     console.log("User vaccines are null or undefined.");
@@ -59,11 +147,9 @@ export default function UpdatePetProfileForm({
                 console.error("Error fetching vaccines:", error);
             });
     }, []);
-    
+
     // Now, you can access the updated state values here
-   
-    
-    
+
     const handleVaccineChange = (selectedVaccines) => {
         setSelectedVaccineIds(selectedVaccines);
         setData("vaccine_ids", selectedVaccines);
@@ -143,12 +229,7 @@ export default function UpdatePetProfileForm({
                 console.error("Error fetching gender options:", error);
             });
     }, []);
-   
-    
-    
-    
-    
-    
+
     const { data, setData, put, errors, processing, recentlySuccessful } =
         useForm({
             pet_name: user.pet_name,
@@ -157,17 +238,22 @@ export default function UpdatePetProfileForm({
             type_id: user.type_id,
             breed: user.breed,
             gender: user.gender,
-            vaccine_ids: selectedVaccines
+            vaccine_ids: selectedVaccines,
+            owner_contact: user.owner_contact,
+            owner_name: user.owner_name,
+            owner_email: user.owner_email,
+            country:user.country,
+            state: user.state,
+            city:user.city,
+            country_code:user.country_code,
         });
-       
+
     const submit = (e) => {
-      
         e.preventDefault();
         put(route("update-pet-profile", { petId: user.id }), {
             // Pass user's ID as petId
             preserveScroll: true,
         });
-        
     };
 
     return (
@@ -209,7 +295,6 @@ export default function UpdatePetProfileForm({
                         type="date"
                         onChange={(e) => setData("d_o_b", e.target.value)}
                         required
-                        isFocused
                         autoComplete="d_o_b"
                     />
 
@@ -274,7 +359,6 @@ export default function UpdatePetProfileForm({
                             setData("last_vaccine_date", e.target.value)
                         }
                         required
-                        isFocused
                         autoComplete="last_vaccine_date"
                     />
 
@@ -290,6 +374,129 @@ export default function UpdatePetProfileForm({
                     />
                     <InputError className="mt-2" message={errors.vaccine_ids} />
                 </div>
+                {roleid === 4 && (
+                    <>
+                        <div>
+                            <InputLabel
+                                htmlFor="owner_name"
+                                value="Owner Name"
+                            />
+                            <ProfileTextInput
+                                id="owner_name"
+                                className="mt-1 block w-full"
+                                value={data.owner_name}
+                                onChange={(e) =>
+                                    setData("owner_name", e.target.value)
+                                }
+                                required
+                                autoComplete="owner_name"
+                            />
+
+                            <InputError
+                                className="mt-2"
+                                message={errors.owner_name}
+                            />
+                        </div>
+                        <div>
+                            <InputLabel
+                                htmlFor="owner_email"
+                                value="Owner Email"
+                            />
+
+                            <ProfileTextInput
+                                id="owner_email"
+                                className="mt-1 block w-full"
+                                type="email"
+                                value={data.owner_email}
+                                onChange={(e) =>
+                                    setData("owner_email", e.target.value)
+                                }
+                                required
+                                autoComplete="owner_email"
+                            />
+
+                            <InputError
+                                className="mt-2"
+                                message={errors.owner_email}
+                            />
+                        </div>
+                        <div>
+                            <InputLabel htmlFor="" value="Contact Number" />
+                            <ProfilePhonenumberInput
+                                id="owner_contact"
+                                type="tel"
+                                name="owner_contact"
+                                placeholder="Your Contact Number"
+                                value={data.owner_contact}
+                                className="mt-1 block w-full"
+                                autoComplete="owner_contact"
+                                countryCode={user.country_code}
+                                onChange={(e) =>
+                                    setData("owner_contact", e.target.value)
+                                }
+                                setData={setData}
+                                required
+                            />
+
+                            <InputError
+                                message={errors.owner_contact}
+                                className="mt-2"
+                            />
+                        </div>
+                        <div>
+                            <InputLabel htmlFor="" value="Country" />
+                            <LocationSelector
+                                options={countryOptions}
+                                onSelect={(selectedOption) => {
+                                    setSelectedCountry(selectedOption.value);
+                                    setData("country", selectedOption.value); // Update country value
+                                }}
+                                placeholder={selectedCountryName}
+                                value="{{ $formData['country'] ?? '' }}"
+                                name="country"
+                            />
+                            <InputError
+                                message={errors.country}
+                                className="mt-2"
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel htmlFor="" value="State" />
+                            <LocationSelector
+                                options={stateOptions}
+                                onSelect={(selectedOption) => {
+                                    setSelectedState(selectedOption.value);
+                                    setData("state", selectedOption.value); // Update country value
+                                }}
+                                placeholder={selectedStateName}
+                                value="{{ $formData['state'] ?? '' }}"
+                                name="state"
+                            />
+                            <InputError
+                                message={errors.state}
+                                className="mt-2"
+                            />
+                        </div>
+                        <div>
+                            <InputLabel htmlFor="" value="City" />
+                            <LocationSelector
+                                options={cityOptions}
+                                onSelect={(selectedOption) => {
+                                    setSelectedCity(selectedOption.value);
+                                    setData("city", selectedOption.value); // Update country value
+                                }}
+                                placeholder={selectedCityName}
+                                value="{{ $formData['city'] ?? '' }}"
+                                name="city"
+                            />
+                            <InputError
+                                message={errors.city}
+                                className="mt-2"
+                            />
+                        </div>
+                    </>
+                )}
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
                         <p className="text-sm mt-2 text-gray-800">

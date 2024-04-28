@@ -1,10 +1,10 @@
 import React from 'react';
 import PrimaryButton from '@/components/PrimaryButton';
-const DataTableActions = ({ options }) => {
+const DataTableActions = ({ options , viewlink}) => {
     return (
         <div className='flex gap-4'>
             {options.includes('view') && (
-                <PrimaryButton>View</PrimaryButton>
+                <PrimaryButton link={viewlink}>View</PrimaryButton>
             )}
             {options.includes('edit') && (
                <PrimaryButton>Edit</PrimaryButton>
