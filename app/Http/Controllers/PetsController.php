@@ -154,9 +154,8 @@ class PetsController extends Controller
         // Return a response indicating success
         return Redirect::back();
     }
-    public function ownerMyPets(){
-        $user = Auth::user();
-        $myPets = Pets::where('owner_id', $user->id)->get();
+    public function ownerMyPets($id){
+        $myPets = Pets::where('owner_id', $id)->get();
         return response()->json(['pets' => $myPets]);
     }
 

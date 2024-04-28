@@ -129,7 +129,7 @@ export default function NavBar() {
                                     textsize="sm"
                                     method="post"
                                     href={route("logout")}
-                                   
+                                    as="button"                                    
                                 >
                                     logout
                                 </NavLink>
