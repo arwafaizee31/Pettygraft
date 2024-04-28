@@ -12,17 +12,20 @@ export default function UserProfileCard({ updateImageRoute, imagePath, name , li
     const [image, setImage] = useState([]);
     useEffect(() => {
        setRole(roleId);
-      
-        if(role == 4){
-            console.log("helllo");
-            setMessage("Welcome, user! Explore our platform to connect with pet owners, receive timely notifications for pet vaccinations, and enjoy a range of services. Your personalized dashboard provides comprehensive business analytics for your vaccines, ensuring you stay informed and efficient. Join us to streamline your services and enhance your pet vaccination business experience.");
-           
-        }
-        else{
-            setMessage("Welcome pet parent! Get started by updating your profile,finding the perfect vaccination vendor, and managing your pet's data. We're here to make pet care a breeze.");
-        }
+   
+        
         setImage(`${imagePath}`);
     }, []);
+    useEffect(() => {
+         if(role == 4){
+    
+         setMessage("Welcome, user! Explore our platform to connect with pet owners, receive timely notifications for pet vaccinations, and enjoy a range of services. Your personalized dashboard provides comprehensive business analytics for your vaccines, ensuring you stay informed and efficient. Join us to streamline your services and enhance your pet vaccination business experience.");
+        
+     }
+     else{
+         setMessage("Welcome pet parent! Get started by updating your profile,finding the perfect vaccination vendor, and managing your pet's data. We're here to make pet care a breeze.");
+     }
+     }, []);
    
     const handleImageChange = (event) => {
         const file = event.target.files[0];

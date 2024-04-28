@@ -4,14 +4,40 @@ import NavLink from "@/components/NavLink";
 import ResponsiveNavLink from "@/components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
 import { IoClose, IoMenu } from "react-icons/io5";
+import { usePage } from "@inertiajs/react";
+import axios from "axios";
+    
+
 
 export default function NavBar() {
     const [showNav1, setShowNav1] = useState(true);
     const [showNav2, setShowNav2] = useState(false);
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
-
+    const [pageTitle, setPageTitle] = useState("");
+    const { url } = usePage(); 
+    const [pageTitles, setPageTitles] = useState({});
+ 
     useEffect(() => {
+        fetch("/api/page-title")
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Page titles data:", data); // Log the fetched data
+
+                setPageTitles(data); // Set the page titles state
+            })
+            .catch((error) => {
+                console.error("Error fetching page titles:", error);
+            });
+    }, []);
+       
+        useEffect(() => {
+            // Update the page title based on the current URL
+            setPageTitle(pageTitles[url] || "Profile");
+        }, [pageTitles, url]);
+        console.log(pageTitles);
+        console.log(url);
+        console.log(pageTitle);
+    useEffect(() => {
+       
         const handleScroll = () => {
             if (window.scrollY > 0) {
                 setShowNav1(false);
@@ -256,14 +282,14 @@ export default function NavBar() {
                 </div> */}
             </nav>
             {renderHeader(
-                "Dashboard",
+                 pageTitle,
                 "bg-primary",
                 "text-white",
                 "header-nav-1",
                 showNav1
             )}
             {renderHeader(
-                "Dashboard",
+                 pageTitle,
                 "bg-white",
                 "text-black",
                 "header-nav-2",

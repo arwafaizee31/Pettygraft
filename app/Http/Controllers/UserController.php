@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Route;
+
+
 
 class UserController extends Controller
 {
@@ -22,4 +26,14 @@ class UserController extends Controller
 
     return response()->json($vendors);
 }
+public function pageTitle()
+{
+    // Get the route name from the request and retrieve the page title from the configuration array
+
+    $pageTitle = Config::get('variables.page_title');
+    
+    // Return the page title as a JSON response
+    return response()->json($pageTitle);
+}
+
 }

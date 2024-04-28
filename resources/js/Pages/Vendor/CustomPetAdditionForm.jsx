@@ -15,7 +15,7 @@ export default function CustomPetAdditionForm({ auth, mustVerifyEmail, status })
                 </h2>
             }
         >
-            <Head title="Custom Pet Addition" />
+            <Head title="Add Pet" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
