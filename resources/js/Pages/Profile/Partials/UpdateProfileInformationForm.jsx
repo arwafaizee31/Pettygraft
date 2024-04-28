@@ -207,7 +207,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                 </div>
               
                 <div>
-                    <InputLabel htmlFor="lname" value="State" />
+                    <InputLabel htmlFor="" value="State" />
                     <LocationSelector
                                 options={stateOptions}
                                 onSelect={(selectedOption) => {
@@ -221,7 +221,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                             <InputError message={errors.state} className="mt-2" />
                 </div>
                 <div>
-                    <InputLabel htmlFor="lname" value="City" />
+                    <InputLabel htmlFor="" value="City" />
                     <LocationSelector
                                 options={cityOptions}
                                 onSelect={(selectedOption) => {

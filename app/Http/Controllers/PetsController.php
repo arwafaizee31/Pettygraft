@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 
+
 class PetsController extends Controller
 {
     //
@@ -26,18 +27,23 @@ class PetsController extends Controller
     public function show($id)
     {
         // Fetch the pet details by ID
-        $pet = Pets::with('breeds', 'types', 'owner', 'vaccines')->findOrFail($id);
-
-        // Check if the authenticated user is the owner of the pet
-        if ($pet->owner_id !== auth()->id()) {
-            // If not the owner, return a forbidden response
-            abort(403, 'Unauthorized action.');
+        $user = Auth::user();
+        $roleId = $user->roles()->first()->id;
+        if ($roleId == 4) {
+            $pet = CustomPets::with('breeds', 'types', 'owner', 'vaccines')->findOrFail($id);
+            return Inertia::render('Vendor/CustomPetProfilePage', [
+                'pet' => $pet, 'roleId' => $roleId
+            ]);
+        } else {
+            $pet = Pets::with('breeds', 'types', 'owner', 'vaccines')->findOrFail($id);
+            if ($pet->owner_id !== auth()->id()) {
+                // If not the owner, return a forbidden response
+                abort(403, 'Unauthorized action.');
+            }
+            return Inertia::render('PetOwner/PetProfilePage', [
+                'pet' => $pet,
+            ]);
         }
-
-        // Pass the pet details to the Inertia view
-        return Inertia::render('PetOwner/PetProfilePage', [
-            'pet' => $pet,
-        ]);
     }
 
     public function getPetGender()
@@ -62,12 +68,17 @@ class PetsController extends Controller
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);
-
-        $pet = Pets::findOrFail($id);
-
-
-        $pet->delete();
-        return Redirect::to('/petowner/dashboard')->with('Pet deleted successfully');
+        $user = Auth::user();
+        $roleId = $user->roles()->first()->id;
+        if ($roleId == 4) {
+            $pet = CustomPets::findOrFail($id);
+            $pet->delete();
+            return Redirect::to('/vendor/dashboard')->with('Pet deleted successfully');
+        } else {
+            $pet = Pets::findOrFail($id);
+            $pet->delete();
+            return Redirect::to('/petowner/dashboard')->with('Pet deleted successfully');
+        }
     }
     public function privateVendorUpdate(Request $request, $petId): RedirectResponse
     {
@@ -126,109 +137,150 @@ class PetsController extends Controller
 
 
         // Validate the request data
-        $validatedData = $request->validate([
+        $user = Auth::user();
+        $roleId = $user->roles()->first()->id;
 
+        if ($roleId == 4) {
+
+            $pet = CustomPets::findOrFail($petId);
+            $validatedData = $request->validate([
+
+                'pet_name' => 'required|string',
+                'd_o_b' => 'required|date',
+                'last_vaccine_date' => 'required|date',
+                'type_id' => 'required',
+                'breed' => 'required',
+                'gender' => 'required',
+                'vaccine_ids' => 'array',
+                'owner_name' => 'required',
+                'owner_email' => 'required|string|email|max:255', // removed lowercase
+                'country_code' => 'required|string|max:255',
+                'owner_contact' => 'required|string|max:255',
+                'country' => 'required|string|max:255',
+                'state' => 'nullable|string|max:255',
+                'city' => 'nullable|string|max:255', // Ensure the vendor ID exists in the users table
+            ]);
+            $pet->pet_name = $validatedData['pet_name'];
+            $pet->d_o_b = $validatedData['d_o_b'];
+            $pet->last_vaccine_date = $validatedData['last_vaccine_date'];
+            $pet->type_id = $validatedData['type_id'];
+            $pet->breed = $validatedData['breed'];
+            $pet->gender = $validatedData['gender'];
+            $pet->owner_name = $validatedData['owner_name'];
+            $pet->owner_email = $validatedData['owner_email'];
+            $pet->country_code = $validatedData['country_code'];
+            $pet->owner_contact = $validatedData['owner_contact'];
+            $pet->country = $validatedData['country'];
+            $pet->state = $validatedData['state'];
+            $pet->city = $validatedData['city'];
+            $pet->save();
+            if (isset($validatedData['vaccine_ids'])) {
+                $pet->vaccines()->sync($validatedData['vaccine_ids']);
+            }
+        } else {
+
+            $pet = Pets::findOrFail($petId);
+            $validatedData = $request->validate([
+
+                'pet_name' => 'required|string',
+                'd_o_b' => 'required|date',
+                'last_vaccine_date' => 'required|date',
+                'type_id' => 'required',
+                'breed' => 'required',
+                'gender' => 'required',
+                'vaccine_ids' => 'array', // Ensure the vendor ID exists in the users table
+            ]);
+            $pet->pet_name = $validatedData['pet_name'];
+            $pet->d_o_b = $validatedData['d_o_b'];
+            $pet->last_vaccine_date = $validatedData['last_vaccine_date'];
+            $pet->type_id = $validatedData['type_id'];
+            $pet->breed = $validatedData['breed'];
+            $pet->gender = $validatedData['gender'];
+            $pet->save();
+            if (isset($validatedData['vaccine_ids'])) {
+                $pet->vaccines()->sync($validatedData['vaccine_ids']);
+            }
+        }
+
+
+        // Return a response indicating success
+        return Redirect::back();
+    }
+    public function ownerMyPets($id)
+    {
+        $myPets = Pets::with('breeds')->where('owner_id', $id)->get();
+        return response()->json(['pets' => $myPets]);
+    }
+
+    public function privatePets($Id)
+    {
+        $pets = Pets::with('breeds', 'owner')->where('deleted_at', null)->where('is_private', 1)->where('permanent_vendor_id', $Id)->get();
+        // Assuming you have a Role model with the necessary fields
+        return response()->json($pets);
+    }
+
+
+    public function addCustomPet(Request $request, $Id): RedirectResponse
+    {
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
             'pet_name' => 'required|string',
             'd_o_b' => 'required|date',
             'last_vaccine_date' => 'required|date',
             'type_id' => 'required',
             'breed' => 'required',
             'gender' => 'required',
-            'vaccine_ids' => 'array', // Ensure the vendor ID exists in the users table
+            'vaccine_ids' => 'array',
+            'owner_name' => 'required',
+            'owner_email' => 'required|string|email|max:255', // removed lowercase
+            'country_code' => 'required|string|max:255',
+            'owner_contact' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
         ]);
 
-        // Find the pet by ID
-        $pet = Pets::findOrFail($petId);
+        // If validation fails, redirect back with error messages
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-        // Update the pet's permanent vendor ID
+        // Retrieve the validated data
+        $validatedData = $validator->validated();
 
+        // Create a new CustomPets instance and save it
+        $pet = new CustomPets();
+        $pet->vendor_id = $Id;
         $pet->pet_name = $validatedData['pet_name'];
         $pet->d_o_b = $validatedData['d_o_b'];
         $pet->last_vaccine_date = $validatedData['last_vaccine_date'];
         $pet->type_id = $validatedData['type_id'];
         $pet->breed = $validatedData['breed'];
         $pet->gender = $validatedData['gender'];
+        $pet->owner_name = $validatedData['owner_name'];
+        $pet->owner_email = $validatedData['owner_email'];
+        $pet->country_code = $validatedData['country_code'];
+        $pet->owner_contact = $validatedData['owner_contact'];
+        $pet->country = $validatedData['country'];
+        $pet->state = $validatedData['state'];
+        $pet->city = $validatedData['city'];
         $pet->save();
+
+        // If there are vaccine IDs, sync them with the pet
         if (isset($validatedData['vaccine_ids'])) {
             $pet->vaccines()->sync($validatedData['vaccine_ids']);
         }
-        // Return a response indicating success
-        return Redirect::back();
+
+        // Redirect back to wherever needed
+        return redirect()->back();
     }
-    public function ownerMyPets($id){
-        $myPets = Pets::with('breeds')->where('owner_id', $id)->get();
-        return response()->json(['pets' => $myPets]);
-    }
-    
-    public function privatePets($Id)
+    public function customPets($Id)
     {
-        $pets = Pets::with('breeds', 'owner')->where('deleted_at', null)->where('is_private',1)->where('permanent_vendor_id', $Id )->get();
-         // Assuming you have a Role model with the necessary fields
+        $pets = CustomPets::with('breeds', 'owner')->where('deleted_at', null)->where('vendor_id', $Id)->get();
+        // Assuming you have a Role model with the necessary fields
         return response()->json($pets);
-}
-
-
-public function addCustomPet(Request $request, $Id): RedirectResponse
-{
-    // Validate the request data
-    $validator = Validator::make($request->all(), [
-        'pet_name' => 'required|string',
-        'd_o_b' => 'required|date',
-        'last_vaccine_date' => 'required|date',
-        'type_id' => 'required',
-        'breed' => 'required',
-        'gender' => 'required',
-        'vaccine_ids' => 'array',
-        'owner_name' => 'required',
-        'owner_email' => 'required|string|email|max:255', // removed lowercase
-        'country_code' => 'required|string|max:255',
-        'owner_contact' => 'required|string|max:255',
-        'country' => 'required|string|max:255',
-        'state' => 'nullable|string|max:255',
-        'city' => 'nullable|string|max:255',
-    ]);
-
-    // If validation fails, redirect back with error messages
-    if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator)->withInput();
     }
-
-    // Retrieve the validated data
-    $validatedData = $validator->validated();
-
-    // Create a new CustomPets instance and save it
-    $pet = new CustomPets();
-    $pet->vendor_id = $Id;
-    $pet->pet_name = $validatedData['pet_name'];
-    $pet->d_o_b = $validatedData['d_o_b'];
-    $pet->last_vaccine_date = $validatedData['last_vaccine_date'];
-    $pet->type_id = $validatedData['type_id'];
-    $pet->breed = $validatedData['breed'];
-    $pet->gender = $validatedData['gender'];
-    $pet->owner_name = $validatedData['owner_name'];
-    $pet->owner_email = $validatedData['owner_email'];
-    $pet->country_code = $validatedData['country_code'];
-    $pet->owner_contact = $validatedData['owner_contact'];
-    $pet->country= $validatedData['country'];
-    $pet->state = $validatedData['state'];
-    $pet->city = $validatedData['city'];
-    $pet->save();
-
-    // If there are vaccine IDs, sync them with the pet
-    if (isset($validatedData['vaccine_ids'])) {
-        $pet->vaccines()->sync($validatedData['vaccine_ids']);
-    }
-
-    // Redirect back to wherever needed
-    return redirect()->back();
-}
-public function customPets($Id)
-{
-    $pets = CustomPets::with('breeds', 'owner')->where('deleted_at', null)->where('vendor_id',$Id)->get();
-     // Assuming you have a Role model with the necessary fields
-    return response()->json($pets);
-}
-public function showPetDetails($id)
+    public function showPetDetails($id)
     {
         $pet = Pets::with('breeds', 'types', 'owner', 'vaccines')->findOrFail($id);
         $petTypeDisplayName = $pet->types->pet_type_display_name;
@@ -239,5 +291,4 @@ public function showPetDetails($id)
         $pet->breed_display_name = $breedDisplayName;
         return Inertia::render('Vendor/PetDetails', ['pet' => $pet]);
     }
-
 }

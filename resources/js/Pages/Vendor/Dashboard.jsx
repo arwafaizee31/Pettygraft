@@ -82,6 +82,7 @@ export default function Dashboard({ auth }) {
     const [pets, setPets] = useState([]);
     const [petStates, setPetStates] = useState({});
     const [privatePets, setPrivatePets] = useState([]);
+    const [petProfilePath, setPetProfilePath] = useState("");
 
     useEffect(() => {
         // Fetch pets data from your API endpoint
@@ -127,6 +128,7 @@ export default function Dashboard({ auth }) {
         }
         setPetStates(states);
     };
+   
 
     const petFields = ['Name', 'Owner Name',  'Date of birth', 'Gender','Last Vaccination Date','Contact no.','Location','Action'];
     const petDataFields = ['pet_name', 'owner_id', 'd_o_b', 'gender','last_vaccine_date','pet_contact','pet_location','Action'];
@@ -195,12 +197,13 @@ export default function Dashboard({ auth }) {
             formattedPet['pet_email'] = pet.owner.email;
             formattedPet['age'] = ageCalculation(pet.d_o_b);
             formattedPet['is_private'] = pet.hasOwnProperty('is_private') ? pet.is_private : false;
+            formattedPet['id'] = pet.id
              return formattedPet;
         });
     };
 
     // Merge pets and privatePets and then format the data
-    const mergedPetsData = [...pets, ...privatePets];
+    const mergedPetsData = [ ...privatePets , ...pets];
     const formattedPets = formatPetsData(mergedPetsData, petDataFields);
 
     return (
@@ -258,7 +261,7 @@ export default function Dashboard({ auth }) {
                             </Grid>
                             <Grid item md={8} xs={12}>
                                 <div className="">
-                                <DataTable tableData={formattedPets} fields={petFields} mainfields={petDataFields} options={['view']} title="Personalized Pets" headerButton="customPetAddition"/>
+                                <DataTable tableData={formattedPets} fields={petFields} mainfields={petDataFields} options={['view']} title="Personalized Pets" headerButton="customPetAddition" viewlink="custompetProfilePage/"/>
                                 </div>
                             </Grid>
                             <Grid item md={4} xs={12}>

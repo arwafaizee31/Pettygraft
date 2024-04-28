@@ -39,7 +39,7 @@ const CustomTooltip = styled(({ className, ...props }) => (
     background-color: white;
    
 `);
-export default function DataTable({ tableData, fields, mainfields, options,headerButton,title }) {
+export default function DataTable({ tableData, fields, mainfields, options,headerButton,title,viewlink }) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [columns, setColumns] = React.useState([]);
@@ -274,8 +274,12 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
                                             )}
                                             {/* Render action buttons if the column is 'Action' */}
                                             {columnMain.id === "Action" && (
+                                           
                                                 <DataTableActions
                                                     options={options}
+                                                    viewlink={row["is_private"] === 1 ? "" : viewlink + (row["id"] ? row["id"] : '')
+
+                                                  }
                                                 />
                                             )}
                                             {columnMain.id !== "pet_name" &&
