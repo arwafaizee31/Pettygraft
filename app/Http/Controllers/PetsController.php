@@ -155,10 +155,10 @@ class PetsController extends Controller
         return Redirect::back();
     }
     public function ownerMyPets($id){
-        $myPets = Pets::where('owner_id', $id)->get();
+        $myPets = Pets::with('breeds')->where('owner_id', $id)->get();
         return response()->json(['pets' => $myPets]);
     }
-
+    
     public function privatePets($Id)
     {
         $pets = Pets::with('breeds', 'owner')->where('deleted_at', null)->where('is_private',1)->where('permanent_vendor_id', $Id )->get();

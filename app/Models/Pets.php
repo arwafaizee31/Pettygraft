@@ -41,5 +41,8 @@ class Pets extends Model
     {
         return $this->belongsToMany(Vaccines::class, 'pet_vaccines', 'pet_id', 'vaccine_id');
     }
- 
+    public function getBreedDisplayNameAttribute()
+    {
+        return $this->breeds->breed_display_name;
+    }
 }
