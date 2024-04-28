@@ -2,7 +2,9 @@ import React from "react";
 import PrimaryButton from "@/components/PrimaryButton";
 import { FormControl } from "@mui/material";
 import { useState, useEffect } from "react";
-export default function UserProfileCard({ updateImageRoute, imagePath, name , link ,roleId}) {
+import axios from "axios"; // Import axios for making HTTP requests
+
+export default function UserProfileCard({ updateImageRoute, imagePath, name , linkDashboard, linkLogout ,roleId}) {
 
     const [message, setMessage] = useState("");
     const [role, setRole] = useState();
@@ -56,6 +58,17 @@ export default function UserProfileCard({ updateImageRoute, imagePath, name , li
             reader.readAsDataURL(file);
         }
     };
+    const handleLogout = () => {
+        // Send a POST request to the logout route
+        axios.post("/logout")
+            .then(response => {
+                console.log("Logout successful");
+                window.location.href = "/login";
+            })
+            .catch(error => {
+                console.error("Logout failed:", error);
+            });
+    };
     return (
         <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow light:bg-gray-800 light:border-gray-700">
             <FormControl sx={{ m: 0, width: "100%", maxWidth: "575px" }}>
@@ -95,10 +108,11 @@ export default function UserProfileCard({ updateImageRoute, imagePath, name , li
                     Team PettyGrapht
                 </em>
                 <div class="mt-4">
-                    <PrimaryButton link={link}>Go to Dashboard</PrimaryButton>
+                    <PrimaryButton link={linkDashboard}>Go to Dashboard</PrimaryButton>
                 </div>
                 <div class="mt-4">
-                    <PrimaryButton link={link}>Logout</PrimaryButton>
+                    {/* <PrimaryButton link={linkLogout}>Logout</PrimaryButton> */}
+                    <PrimaryButton onClick={handleLogout}>Logout</PrimaryButton>
                 </div>
             </div>
         </div>

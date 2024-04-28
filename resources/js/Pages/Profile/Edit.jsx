@@ -59,7 +59,9 @@ export default function Edit({ auth, mustVerifyEmail, status }) {
                                 imagePath={auth.user.avatar}
                                 updateImageRoute={`/update-user-image/${auth.user.id}`}
                                 name={auth.user.fname + " " + auth.user.lname}
-                                link={`${routeUrl}/dashboard`}
+                                // link={`${routeUrl}/dashboard`}
+                                linkDashboard={`${routeUrl}/dashboard`}
+                                linkLogout={`logout`}
                                 roleId={RoleId}
                             />
                         </div>
