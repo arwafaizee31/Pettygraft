@@ -75,7 +75,7 @@ export default function VaccineListing({ auth }) {
                             tableData={formattedVaccines}
                             fields={vaccineFields}
                             mainfields={vaccineDataFields}
-                            headerButton={true}
+                            headerButton="vaccineAddition"
                             title="All Vaccines"
                         />
                     </div>

@@ -82,6 +82,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return Inertia::render('Vendor/VaccineAdditionForm');
         })->name('vaccineAdditionForm');
         Route::post('/vaccineAddition/{Id}', [VaccineController::class, 'addVaccine'])->name('vaccineAddition');
+        Route::get('/customPetAddition', function () {
+            return Inertia::render('Vendor/CustomPetAdditionForm');
+        })->name('customPetAddition');
+        Route::post('/customPetAddition/{Id}', [PetsController::class, 'addCustomPet'])->name('customPetAddition.save');
         
     });
 
