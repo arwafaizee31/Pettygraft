@@ -261,7 +261,7 @@ export default function Dashboard({ auth }) {
                             </Grid>
                             <Grid item md={8} xs={12}>
                                 <div className="">
-                                <DataTable tableData={formattedPets} fields={petFields} mainfields={petDataFields} options={['view']} title="Personalized Pets" headerButton="customPetAddition" viewlink="custompetProfilePage/"/>
+                                <DataTable tableData={formattedPets} fields={petFields} mainfields={petDataFields} options={['view']} title="Personalized Pets" headerButton="customPetAddition" viewlink="custompetProfilePage/" enableFilter={false}/>
                                 </div>
                             </Grid>
                             <Grid item md={4} xs={12}>

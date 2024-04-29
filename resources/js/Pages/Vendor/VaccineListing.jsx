@@ -77,6 +77,7 @@ export default function VaccineListing({ auth }) {
                             mainfields={vaccineDataFields}
                             headerButton="vaccineAddition"
                             title="All Vaccines"
+                            enableFilter={false}
                         />
                     </div>
                 </div>

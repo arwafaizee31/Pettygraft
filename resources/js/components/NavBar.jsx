@@ -18,7 +18,7 @@ export default function NavBar({user}) {
         fetch("/api/page-title")
             .then((response) => response.json())
             .then((data) => {
-                console.log("Page titles data:", data); // Log the fetched data
+                // Log the fetched data
 
                 setPageTitles(data); // Set the page titles state
             })
@@ -31,9 +31,7 @@ export default function NavBar({user}) {
             // Update the page title based on the current URL
             setPageTitle(pageTitles[url] || "Profile");
         }, [pageTitles, url]);
-        console.log(pageTitles);
-        console.log(url);
-        console.log(pageTitle);
+       
     useEffect(() => {
        
         const handleScroll = () => {

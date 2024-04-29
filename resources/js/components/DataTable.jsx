@@ -39,14 +39,23 @@ const CustomTooltip = styled(({ className, ...props }) => (
     background-color: white;
    
 `);
-export default function DataTable({ tableData, fields, mainfields, options,headerButton,title,viewlink }) {
+export default function DataTable({
+    tableData,
+    fields,
+    mainfields,
+    options,
+    headerButton,
+    title,
+    viewlink,
+    enableFilter
+}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [columns, setColumns] = React.useState([]);
     const [columnsMain, setColumnsMain] = React.useState([]);
     const [genderOptions, setGenderOptions] = useState([]);
-    const [selectedGender, setSelectedGender] = useState("");
-    const [selectedGenderName, setSelectedGenderName] = useState("");
+    const [filters, setFilters] = useState({});
+    const [vendorFilter, setVendorFilter] = useState("all");
 
     useEffect(() => {
         // Fetch gender options from your API endpoint
@@ -58,7 +67,6 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
                     label: value,
                 }));
                 setGenderOptions(options);
-                // Set gender data in state
             })
             .catch((error) => {
                 console.error("Error fetching petgender:", error);
@@ -69,10 +77,10 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
         if (fields.length > 0) {
             const formattedColumns = fields.map((field) => ({
                 id: field,
-                label: field.charAt(0).toUpperCase() + field.slice(1), // Capitalize first letter
+                label: field.charAt(0).toUpperCase() + field.slice(1),
                 minWidth: 170,
                 align: "left",
-                style: { marginLeft: '20px' }
+                style: { marginLeft: "20px" },
             }));
             setColumns(formattedColumns);
         }
@@ -82,7 +90,7 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
         if (mainfields.length > 0) {
             const formattedColumnsMain = mainfields.map((mainfield) => ({
                 id: mainfield,
-                label: mainfield.charAt(0).toUpperCase() + mainfield.slice(1), // Capitalize first letter
+                label: mainfield.charAt(0).toUpperCase() + mainfield.slice(1),
                 minWidth: 170,
                 align: "left",
             }));
@@ -95,43 +103,112 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target. value);
+        setRowsPerPage(+event.target.value);
         setPage(0);
     };
 
+    const handleFilterChange = (event, columnId) => {
+        const { value } = event.target;
+        setFilters(filters => ({
+            ...filters,
+            [columnId]: value,
+        }));
+    };
+    const handleVendorFilterChange = (event) => {
+        const selectedFilter = event.target.value;
+        
+        setVendorFilter(selectedFilter);
+    };
+
+    const getFilteredData = () => {
+        let filteredData = [...tableData];
+    
+        const filterValue = Object.values(filters).join('').toLowerCase();
+    
+        if (filterValue) {
+            filteredData = filteredData.filter(row =>
+                Object.values(row).some(value =>
+                    String(value).toLowerCase().includes(filterValue)
+                )
+            );
+        }
+        filteredData = filteredData.filter(row => {
+            if (vendorFilter === "all") {
+                // Return true for all vendors
+                return true;
+            } else if (vendorFilter === "premium") {
+                 // Return true only for premium vendors
+                 
+                 return row["is_premium"] === 1;
+            }
+            return false;
+        });
+    
+        return filteredData;
+    };
+  
+
+    // Filtering logic based on the selected vendor filter
+   
+        // Filter premium vendors based on the selected filter and original tableData
+       
+    
+
     return (
-     
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }} class="mt-5">
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "10px",
+                }}
+                class="mt-5"
+            >
                 <h2 class="text-4xl ms-4">{title}</h2>
+                {enableFilter && ( // Render dropdown filter when enableFilter is true
+                    <div class="me-4">
+                        <select value={vendorFilter} onChange={handleVendorFilterChange}>
+                            <option value="all">All Vendors</option>
+                            <option value="premium">Premium Vendors</option>
+                        </select>
+                    </div>
+                )}
                 {headerButton && (
-                 <div class="me-4">
-                    <PrimaryButton link={headerButton}>Add</PrimaryButton>
+                    <div class="me-4">
+                        <PrimaryButton link={headerButton}>Add</PrimaryButton>
                     </div>
                 )}
             </div>
-    
+
             <TableContainer sx={{ maxHeight: 440 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
-                        <TableRow>
+                    <TableRow>
                             {columns.map((column) => (
                                 <TableCell
                                     key={column.id}
                                     align={column.align}
                                     style={{ minWidth: column.minWidth }}
                                 >
-                                    {column.label}
+                                    {(enableFilter && column.label!=='Action') ? ( // Conditionally render filter input
+                                        <input
+                                            type="text"
+                                            placeholder={`Search ${column.label}`}
+                                            value={filters[column.id] || ""}
+                                            onChange={(event) => handleFilterChange(event, column.id)}
+                                            style={{ width: "100%" }}
+                                        />
+                                    ) : (
+                                        column.label // Just render column label if enableFilter is false
+                                    )}
                                 </TableCell>
                             ))}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {tableData
-                            .slice(
-                                page * rowsPerPage,
-                                page * rowsPerPage + rowsPerPage
-                            )
+                        {getFilteredData()
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => (
                                 <TableRow
                                     hover
@@ -144,6 +221,7 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
                                             key={columnMain.id}
                                             align={columnMain.align}
                                         >
+                                           
                                             {/* Render different formats based on the column id */}
                                             {columnMain.id === "pet_name" && (
                                                 <CustomTooltip
@@ -179,19 +257,34 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
                                                 >
                                                     <div className="flex gap-4">
                                                         {/* Use a conditional statement to choose the image based on the pet type */}
-                                                        <img
-                                                            src={
-                                                                row[
-                                                                    "type_id"
-                                                                ] === 1
-                                                                    ? "/dogtable.png"
-                                                                    : "/cattable.png"
-                                                            }
-                                                            alt=""
-                                                            height={50}
-                                                            width={50}
-                                                            className="border border-gray-900 rounded-full"
-                                                        />
+                                                        {row["type_id"] == 1 ||
+                                                        row["type_id"] == 2 ? (
+                                                            <img
+                                                                src={
+                                                                    row[
+                                                                        "type_id"
+                                                                    ] === 1
+                                                                        ? "/dogtable.png"
+                                                                        : "/cattable.png"
+                                                                }
+                                                                alt=""
+                                                                height={50}
+                                                                width={50}
+                                                                className="border border-gray-900 rounded-full"
+                                                            />
+                                                        ) : (
+                                                            <img
+                                                                src={
+                                                                   row["avatar"]
+                                                                }
+                                                                alt=""
+                                                                height={50}
+                                                                width={50}
+                                                                className="border border-gray-900 rounded-full"
+                                                            />
+                                                        )}
+                                                        
+                                                      
                                                         <div className="flex flex-col">
                                                             <div className="flex flex-row gap-1">
                                                                 <h4>
@@ -201,9 +294,11 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
                                                                         ]
                                                                     }
                                                                 </h4>
-                                                                {row[
+                                                                {(row[
                                                                     "is_private"
-                                                                ] === 1 ? (
+                                                                ] === 1 || row[
+                                                                    "is_premium"
+                                                                ] === 1 ) ? (
                                                                     <svg
                                                                         class="w-4 h-4 text-gray-800"
                                                                         aria-hidden="true"
@@ -212,7 +307,7 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
                                                                         viewBox="0 0 20 20"
                                                                     >
                                                                         <path
-                                                                           fill="#f88080"
+                                                                            fill="#f88080"
                                                                             d="m18.774 8.245-.892-.893a1.5 1.5 0 0 1-.437-1.052V5.036a2.484 2.484 0 0 0-2.48-2.48H13.7a1.5 1.5 0 0 1-1.052-.438l-.893-.892a2.484 2.484 0 0 0-3.51 0l-.893.892a1.5 1.5 0 0 1-1.052.437H5.036a2.484 2.484 0 0 0-2.48 2.481V6.3a1.5 1.5 0 0 1-.438 1.052l-.892.893a2.484 2.484 0 0 0 0 3.51l.892.893a1.5 1.5 0 0 1 .437 1.052v1.264a2.484 2.484 0 0 0 2.481 2.481H6.3a1.5 1.5 0 0 1 1.052.437l.893.892a2.484 2.484 0 0 0 3.51 0l.893-.892a1.5 1.5 0 0 1 1.052-.437h1.264a2.484 2.484 0 0 0 2.481-2.48V13.7a1.5 1.5 0 0 1 .437-1.052l.892-.893a2.484 2.484 0 0 0 0-3.51Z"
                                                                         />
                                                                         <path
@@ -274,12 +369,16 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
                                             )}
                                             {/* Render action buttons if the column is 'Action' */}
                                             {columnMain.id === "Action" && (
-                                           
                                                 <DataTableActions
                                                     options={options}
-                                                    viewlink={row["is_private"] === 1 ? "" : viewlink + (row["id"] ? row["id"] : '')
-
-                                                  }
+                                                    viewlink={
+                                                        row["is_private"] === 1
+                                                            ? ""
+                                                            : viewlink +
+                                                              (row["id"]
+                                                                  ? row["id"]
+                                                                  : "")
+                                                    }
                                                 />
                                             )}
                                             {columnMain.id !== "pet_name" &&
@@ -299,7 +398,7 @@ export default function DataTable({ tableData, fields, mainfields, options,heade
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25, 100]}
                 component="div"
-                count={tableData.length}
+                count={getFilteredData().length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

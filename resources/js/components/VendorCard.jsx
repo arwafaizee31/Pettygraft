@@ -1,9 +1,10 @@
-import PrimaryButton from "@/components/PrimaryButton";
-import BasicRating from "@/components/BasicRating";
+import React from 'react'
 import { getCountryName } from "@/utils/utils";
-export default function VendorProfileCard({ vendor }) {
+import PrimaryButton from "@/components/PrimaryButton";
+import BasicRating from '@/components/BasicRating';
+export default function VendorCard({vendor}){
     return (
-        <>
+<>
             <div className="wrap">
                 <div className="vendor-card">
                     <div
@@ -58,7 +59,8 @@ export default function VendorProfileCard({ vendor }) {
                                 </div>
                                 <div class="text-center">
                                     <p class="mb-3 text-gray-200 dark:text-gray-400 font-bold">
-                                        <BasicRating values={5} />
+                                    <BasicRating values={5} />
+                                  
                                     </p>
                                 </div>
                                 <p class="mb-3 font-normal">

@@ -20,6 +20,7 @@ export default function CustomPetAddition({
     user,
     roleid
 }) {
+    console.log("role:", roleid);
     const [petTypes, setPetTypes] = useState([]);
     const [selectedPetType, setSelectedPetType] = useState("");
     const [selectedPetTypeName, setSelectedPetTypeName] = useState("");
@@ -122,14 +123,14 @@ export default function CustomPetAddition({
         fetch("/api/allVaccines")
             .then((response) => response.json())
             .then((data) => {
-                console.log("Vaccines data:", data); // Log the fetched data
+                 // Log the fetched data
                 const options = data.map((vaccine) => ({
                     label: vaccine.vaccine_name,
                     value: vaccine.id,
                 }));
 
                 // Log the transformed options
-                console.log("Vaccine options:", options);
+               
 
                 setVaccines(options);
 
@@ -388,6 +389,8 @@ export default function CustomPetAddition({
                     />
                     <InputError className="mt-2" message={errors.vaccine_ids} />
                 </div>
+            {!(roleid === 3)&& (
+                    <>
                 <div>
                     <InputLabel htmlFor="owner_name" value="Owner Name" />
 
@@ -484,6 +487,8 @@ export default function CustomPetAddition({
                             />
                             <InputError message={errors.city} className="mt-2" />
                                 </div>
+                                </>
+                )}
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
                         <p className="text-sm mt-2 text-gray-800">

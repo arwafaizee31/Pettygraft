@@ -8,7 +8,7 @@ use App\Http\Controllers\PetsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VaccineController;
-
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -86,7 +86,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/customPetAddition', function () {
             return Inertia::render('Vendor/CustomPetAdditionForm');
         })->name('customPetAddition');
-        Route::post('/customPetAddition/{Id}', [PetsController::class, 'addCustomPet'])->name('customPetAddition.save');
+     
         Route::get('/petDetails/{id}', [PetsController::class, 'showPetDetails'])->name('pet-details-page');
         Route::get('/custompetProfilePage/{id}', [PetsController::class, 'show'])->name('customPetProfilePage');
         Route::get('/sendDateApproachMail', [VaccineController::class, 'vaccineDateApproach'])->name('vaccinesDateApproachMail');
@@ -98,11 +98,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/update-user-image/{Id}', [ProfileController::class, 'updateUserImage'])->name('update-user-image');
     Route::delete('/petProfile/{id}', [PetsController::class, 'destroy'])->name('petProfile.destroy');
     Route::put('/update-pet-profile/{petId}', [PetsController::class, 'updatePetProfile'])->name('update-pet-profile');
-    Route::get('/vendors', function () {
-        return Inertia::render('VendorCards');
-    })->name('frontend.vendors');
-    
-    
+  
+    Route::post('/customPetAddition/{Id}', [PetsController::class, 'addCustomPet'])->name('customPetAddition.save');
+   
+    Route::get('/allVendors', function () {
+        return Inertia::render('AllVendorListing');
+    })->name('vendors.show');
 });
+Route::get('/vendors', function () {
+    return Inertia::render('FrontendVendors');
+})->name('frontend.vendors');
 
 require __DIR__ . '/auth.php';

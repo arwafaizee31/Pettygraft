@@ -24,6 +24,8 @@ class UserController extends Controller
                    ->whereHas('roles', function ($query) {
                        $query->where('role_id', 4);
                    })
+                   ->orderBy('is_premium', 'desc') // Sort by is_premium in descending order
+                   ->orderBy('id', 'desc')
                    ->get();
 
     return response()->json($vendors);
@@ -68,6 +70,7 @@ public function premiumVendors()
     
     return response()->json($vendors);
 }
+
 
 
 }

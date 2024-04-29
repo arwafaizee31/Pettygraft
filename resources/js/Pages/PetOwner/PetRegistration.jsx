@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Head } from "@inertiajs/react";
 
 export default function PetRegistration({ auth, mustVerifyEmail, status , roleId}) {
-  
+ 
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -27,7 +27,7 @@ export default function PetRegistration({ auth, mustVerifyEmail, status , roleId
                                 status={status}
                                 className="max-w-xl"
                                 user={auth.user}
-                                roleid = {roleId}
+                                roleid={roleId}
                             />
                         </div>
                     </div>
