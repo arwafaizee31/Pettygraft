@@ -22,9 +22,14 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = Auth::user();
+        $userwithVaccines = User::with('vaccines')->findOrFail($user->id);
+        
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'userwithVaccines' =>$userwithVaccines
+
         ]);
     }
 
@@ -58,6 +63,17 @@ class ProfileController extends Controller
     public function update(Request $request, $Id): RedirectResponse
     {
         $user = User::findOrFail($Id);
+        $userRole = $user->roles()->first()->id;
+        if($userRole == 4){
+           
+            $validatedData0 = $request->validate([
+               
+                'profile_description' => 'required|string|max:500',
+                'vaccine_ids' => 'array',
+    
+            ]);
+
+        }
         if($request->email == $user->email){
             $validatedData = $request->validate([
                 'fname' => 'required|string|max:255',
@@ -92,9 +108,17 @@ class ProfileController extends Controller
         try {
             // Find the user by ID
             $user = User::findOrFail($Id);
-
+           
             // Update the user's data
             $user->update($validatedData);
+            if($userRole==4){
+                $user->update($validatedData0);
+                if (isset($validatedData0['vaccine_ids'])) {
+                    $user->vaccines()->sync($validatedData0['vaccine_ids']);
+                }
+
+            }
+           
 
             // Return a response indicating success
             return redirect()->back()->with('success', 'Profile updated successfully.');

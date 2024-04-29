@@ -14,6 +14,7 @@ import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import PrimaryButton from "./PrimaryButton";
 import { Margin } from "@mui/icons-material";
+import MultipleSelect from "@/components/MultipleSelect";
 
 const defaultTheme = createTheme();
 const theme = createTheme({
@@ -47,7 +48,7 @@ export default function DataTable({
     headerButton,
     title,
     viewlink,
-    enableFilter
+    enableFilter,
 }) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -56,6 +57,53 @@ export default function DataTable({
     const [genderOptions, setGenderOptions] = useState([]);
     const [filters, setFilters] = useState({});
     const [vendorFilter, setVendorFilter] = useState("all");
+    const [Vaccines, setVaccines] = useState([]);
+    const [selectedVaccines, setSelectedVaccines] = useState([]);
+    const [selectedVaccineIds, setSelectedVaccineIds] = useState([]);
+  
+   
+    useEffect(() => {
+        fetch("/api/allVaccines")
+            .then((response) => response.json())
+            .then((data) => {
+                 // Log the fetched data
+                const options = data.map((vaccine) => ({
+                    label: vaccine.vaccine_name,
+                    value: vaccine.id,
+                }));
+
+                // Log the transformed options
+               
+
+                setVaccines(options);
+
+                // Check if user.vaccines is defined and not null
+                if (user.vaccines) {
+                    const initialSelectedVaccineIds = user.vaccines.map(
+                        (vaccine) => vaccine.id
+                    );
+
+                    setSelectedVaccineIds(initialSelectedVaccineIds);
+                    setSelectedVaccines(initialSelectedVaccineIds);
+
+                    setData("vaccine_ids", initialSelectedVaccineIds);
+                } else {
+                    console.log("User vaccines are null or undefined.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching vaccines:", error);
+            });
+    }, []);
+
+    // Now, you can access the updated state values here
+
+    const handleVaccineChange = (selectedVaccines) => {
+        setSelectedVaccineIds(selectedVaccines);
+        setData("vaccine_ids", selectedVaccines);
+        // Update vaccine IDs in your form data
+        // For example: setData("vaccine_ids", selectedVaccines);
+    };
 
     useEffect(() => {
         // Fetch gender options from your API endpoint
@@ -106,17 +154,18 @@ export default function DataTable({
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    
 
     const handleFilterChange = (event, columnId) => {
         const { value } = event.target;
-        setFilters(filters => ({
+        setFilters((filters) => ({
             ...filters,
             [columnId]: value,
         }));
     };
     const handleVendorFilterChange = (event) => {
         const selectedFilter = event.target.value;
-        
+
         setVendorFilter(selectedFilter);
     };
 
@@ -132,27 +181,40 @@ export default function DataTable({
                 )
             );
         }
+        
+        filteredData = filteredData.filter(row => {
+            // Check if the selected vaccine IDs are present in the row's vaccineIds
+            // Assuming the vaccine IDs are stored in the field named 'vaccineIds' in each row
+            if (selectedVaccineIds.length === 0) {
+                // If no vaccine is selected, return true for all rows
+                return true;
+            } else {
+
+                
+                return selectedVaccineIds.every(selectedVaccineId =>
+                    row['vaccineIds'].includes(selectedVaccineId)
+                );
+            }
+        });
+    
         filteredData = filteredData.filter(row => {
             if (vendorFilter === "all") {
                 // Return true for all vendors
                 return true;
             } else if (vendorFilter === "premium") {
-                 // Return true only for premium vendors
-                 
-                 return row["is_premium"] === 1;
+                // Return true only for premium vendors
+                return row["is_premium"] === 1;
             }
             return false;
         });
     
         return filteredData;
     };
-  
+    
 
     // Filtering logic based on the selected vendor filter
-   
-        // Filter premium vendors based on the selected filter and original tableData
-       
-    
+
+    // Filter premium vendors based on the selected filter and original tableData
 
     return (
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -166,14 +228,31 @@ export default function DataTable({
                 class="mt-5"
             >
                 <h2 class="text-4xl ms-4">{title}</h2>
-                {enableFilter && ( // Render dropdown filter when enableFilter is true
-                    <div class="me-4">
-                        <select value={vendorFilter} onChange={handleVendorFilterChange}>
+                {enableFilter && (
+                 <div class="flex gap-2">
+                      <div style={{width:'400px'}}>
+                            <MultipleSelect
+                                options={Vaccines} // Pass your vaccine options here
+                                label="Select Available Vaccines"
+                                selectedValues={selectedVaccineIds}
+                                setSelectedValues={handleVaccineChange}
+                                
+                            />
+                        </div>
+                    <div className="me-4">
+                        <select
+                            value={vendorFilter}
+                            onChange={handleVendorFilterChange}
+                        >
                             <option value="all">All Vendors</option>
                             <option value="premium">Premium Vendors</option>
                         </select>
+                        </div>
+                      
+                        
                     </div>
                 )}
+
                 {headerButton && (
                     <div class="me-4">
                         <PrimaryButton link={headerButton}>Add</PrimaryButton>
@@ -184,19 +263,25 @@ export default function DataTable({
             <TableContainer sx={{ maxHeight: 440 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
-                    <TableRow>
+                        <TableRow>
                             {columns.map((column) => (
                                 <TableCell
                                     key={column.id}
                                     align={column.align}
                                     style={{ minWidth: column.minWidth }}
                                 >
-                                    {(enableFilter && column.label!=='Action') ? ( // Conditionally render filter input
+                                    {enableFilter &&
+                                    column.label !== "Action" ? ( // Conditionally render filter input
                                         <input
                                             type="text"
                                             placeholder={`Search ${column.label}`}
                                             value={filters[column.id] || ""}
-                                            onChange={(event) => handleFilterChange(event, column.id)}
+                                            onChange={(event) =>
+                                                handleFilterChange(
+                                                    event,
+                                                    column.id
+                                                )
+                                            }
                                             style={{ width: "100%" }}
                                         />
                                     ) : (
@@ -208,7 +293,10 @@ export default function DataTable({
                     </TableHead>
                     <TableBody>
                         {getFilteredData()
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                            )
                             .map((row, index) => (
                                 <TableRow
                                     hover
@@ -221,7 +309,6 @@ export default function DataTable({
                                             key={columnMain.id}
                                             align={columnMain.align}
                                         >
-                                           
                                             {/* Render different formats based on the column id */}
                                             {columnMain.id === "pet_name" && (
                                                 <CustomTooltip
@@ -275,7 +362,9 @@ export default function DataTable({
                                                         ) : (
                                                             <img
                                                                 src={
-                                                                   row["avatar"]
+                                                                    row[
+                                                                        "avatar"
+                                                                    ]
                                                                 }
                                                                 alt=""
                                                                 height={50}
@@ -283,8 +372,7 @@ export default function DataTable({
                                                                 className="border border-gray-900 rounded-full"
                                                             />
                                                         )}
-                                                        
-                                                      
+
                                                         <div className="flex flex-col">
                                                             <div className="flex flex-row gap-1">
                                                                 <h4>
@@ -294,11 +382,12 @@ export default function DataTable({
                                                                         ]
                                                                     }
                                                                 </h4>
-                                                                {(row[
+                                                                {row[
                                                                     "is_private"
-                                                                ] === 1 || row[
+                                                                ] === 1 ||
+                                                                row[
                                                                     "is_premium"
-                                                                ] === 1 ) ? (
+                                                                ] === 1 ? (
                                                                     <svg
                                                                         class="w-4 h-4 text-gray-800"
                                                                         aria-hidden="true"

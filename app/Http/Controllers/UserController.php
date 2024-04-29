@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
-
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 
 class UserController extends Controller
@@ -20,7 +21,7 @@ class UserController extends Controller
     }
     public function allVendors()
 {
-    $vendors = User::whereNull('deleted_at')
+    $vendors = User::with('vaccines')->whereNull('deleted_at')
                    ->whereHas('roles', function ($query) {
                        $query->where('role_id', 4);
                    })
@@ -70,7 +71,12 @@ public function premiumVendors()
     
     return response()->json($vendors);
 }
-
+public function showVendorDetails($id)
+{
+    $vendor = User::with('roles', 'vaccines')->findOrFail($id);
+   
+    return Inertia::render('VendorDetails', ['vendor' => $vendor]);
+}
 
 
 }

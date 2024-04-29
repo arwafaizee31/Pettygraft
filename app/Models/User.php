@@ -31,7 +31,8 @@ class User extends Authenticatable
         'state',
         'city',
         'role_id',
-        'avatar'
+        'avatar',
+        'profile_description'   
     ];
 
     /**
@@ -60,5 +61,9 @@ class User extends Authenticatable
     public function pets()
     {
         return $this->hasMany(Pets::class, 'owner_id', 'id');
+    }
+    public function vaccines()
+    {
+        return $this->belongsToMany(Vaccines::class, 'vendor_vaccines', 'vendor_id', 'vaccine_id');
     }
 }

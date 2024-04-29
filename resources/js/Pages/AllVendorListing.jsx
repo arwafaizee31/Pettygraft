@@ -40,7 +40,7 @@ export default function AllVendorListing({auth}) {
     };
 
     const Fields = ['Name', 'Email',  'Contact no.', 'Location','Action'];
-    const DataFields = ['pet_name', 'email', 'pet_contact', 'pet_location','Action'];
+    const DataFields = ['pet_name', 'email', 'pet_contact', 'pet_location','Action','id'];
     const formatData = (Data,DataFields) => {   
        
 
@@ -63,7 +63,9 @@ export default function AllVendorListing({auth}) {
             formattedPet['pet_city'] = data.city;
             formattedPet['avatar'] = data.avatar;
             formattedPet['is_premium'] = data.is_premium;
-           
+            formattedPet['vaccineIds'] = data.vaccines.map(vaccine => vaccine.id);
+
+         
             return formattedPet;
         });
     };
@@ -86,7 +88,7 @@ export default function AllVendorListing({auth}) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="">
-                    <DataTable tableData={formattedData} fields={Fields} mainfields={DataFields} options={['view']} title="All Vendors"  enableFilter={true}/>
+                    <DataTable tableData={formattedData} fields={Fields} mainfields={DataFields} options={['view']} title="All Vendors" enableFilter={true} viewlink={`vendorDetails/`}/>
                         
                     </div>
                 </div>

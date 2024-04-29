@@ -4,7 +4,7 @@ import { getDialingCode, ageCalculation } from "@/utils/utils";
 import PetProfileCardEdited from "@/components/PetProfileCardEdited";
 import PetDetailsOnly from "@/components/PetDetailsOnly";
 
-export default function PetProfilePage({ auth, mustVerifyEmail, status, pet }) {
+export default function PetDetails({ auth, mustVerifyEmail, status, pet }) {
     return (
         <AuthenticatedLayout
             user={auth.user}

@@ -118,18 +118,19 @@ export default function UpdatePetProfileForm({
         fetch("/api/allVaccines")
             .then((response) => response.json())
             .then((data) => {
-                console.log("Vaccines data:", data); // Log the fetched data
+               // Log the fetched data
                 const options = data.map((vaccine) => ({
                     label: vaccine.vaccine_name,
                     value: vaccine.id,
                 }));
 
                 // Log the transformed options
-                console.log("Vaccine options:", options);
+             
 
                 setVaccines(options);
-
+                
                 // Check if user.vaccines is defined and not null
+             
                 if (user.vaccines) {
                     const initialSelectedVaccineIds = user.vaccines.map(
                         (vaccine) => vaccine.id

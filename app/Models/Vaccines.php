@@ -30,4 +30,8 @@ class Vaccines extends Model
     {
         return $this->belongsToMany(CustomPets::class, 'custom_pet_vaccines');
     }
+    public function vendors()
+    {
+        return $this->belongsToMany(User::class, 'vendor_vaccines');
+    }
 }

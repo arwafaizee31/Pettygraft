@@ -9,8 +9,9 @@ import LocationSelector from '@/components/LocationSelector';
 import React, { useEffect, useState } from 'react';
 import {  getCountryName, getStateName} from '@/utils/utils';
 import ProfilePhonenumberInput from '@/components/ProfilePhonenumberInput';
-
-export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }) {
+import MultipleSelect from "@/components/MultipleSelect";
+export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' ,roleId , userwithVaccines}) {
+   
     const user = usePage().props.auth.user;
     const [countryOptions, setCountryOptions] = useState([]);
     const [stateOptions, setStateOptions] = useState([]);
@@ -21,6 +22,8 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
     const [selectedCountryName, setSelectedCountryName] = useState('');
     const [selectedStateName, setSelectedStateName] = useState('');
     const [selectedCityName, setSelectedCityName] = useState('');
+    const [selectedVaccines, setSelectedVaccines] = useState([]);
+    const [Vaccines, setVaccines] = useState([]);
     useEffect(() => {
         // Fetch countries data
         fetchCountries();
@@ -92,6 +95,52 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
             console.error('Error fetching cities:', error);
         }
     };
+     const [selectedVaccineIds, setSelectedVaccineIds] = useState([]);
+    useEffect(() => {
+        fetch("/api/allVaccines")
+            .then((response) => response.json())
+            .then((data) => {
+               // Log the fetched data
+                const options = data.map((vaccine) => ({
+                    label: vaccine.vaccine_name,
+                    value: vaccine.id,
+                }));
+
+                // Log the transformed options
+             
+
+                setVaccines(options);
+
+                // Check if user.vaccines is defined and not null
+                
+                if (userwithVaccines.vaccines) {
+                   
+                    const initialSelectedVaccineIds = userwithVaccines.vaccines.map(
+                        (vaccine) => vaccine.id
+                    );
+
+                    setSelectedVaccineIds(initialSelectedVaccineIds);
+                    setSelectedVaccines(initialSelectedVaccineIds);
+
+                    setData("vaccine_ids", initialSelectedVaccineIds);
+                } else {
+                    console.log("User vaccines are null or undefined.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching vaccines:", error);
+            });
+    }, []);
+    
+    // Now, you can access the updated state values here
+
+    const handleVaccineChange = (selectedVaccines) => {
+        setSelectedVaccineIds(selectedVaccines);
+        setData("vaccine_ids", selectedVaccines);
+        // Update vaccine IDs in your form data
+        // For example: setData("vaccine_ids", selectedVaccines);
+    };
+   
     const { data, setData, put, errors, processing, recentlySuccessful } = useForm({
         fname: user.fname,
         lname: user.lname,
@@ -101,10 +150,12 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
         city:user.city,
         country_code:user.country_code,
         email: user.email,
-       
+        profile_description: user.profile_description,
+        vaccine_ids: selectedVaccines,
     });
+    console.log(data.vaccine_ids)
     const submit = (e) => {
-      
+      console.log(data);
         e.preventDefault();
       
         put(route("profile.update", { Id: user.id }), {
@@ -235,7 +286,40 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                             />
                             <InputError message={errors.city} className="mt-2" />
                 </div>
+                     {roleId === 4 && (
+                    <>
+                        <div>
+                            <InputLabel
+                                htmlFor="profile_description"
+                                value="Profile Description"
+                            />
+                            <ProfileTextInput
+                                id="profile_description"
+                                className="mt-1 block w-full"
+                                value={data.profile_description}
+                                onChange={(e) =>
+                                    setData("profile_description", e.target.value)
+                                }
+                                required
+                                autoComplete="profile_description"
+                            />
 
+                            <InputError
+                                className="mt-2"
+                                message={errors.profile_description}
+                            />
+                        </div>
+                        <div>
+                    <MultipleSelect
+                        options={Vaccines} // Pass your vaccine options here
+                        label="Select Available Vaccines"
+                        selectedValues={selectedVaccineIds}
+                        setSelectedValues={handleVaccineChange}
+                    />
+                    <InputError className="mt-2" message={errors.vaccine_ids} />
+                </div>
+                        </>
+)}
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
                         <p className="text-sm mt-2 text-gray-800">

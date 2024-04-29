@@ -42,7 +42,7 @@ export default function MyPets() {
                     </div>
                     <div class="grid grid-cols-1">
             <div class="text-center" style={{marginTop:'470px'}}>
-                <PrimaryButton>
+                <PrimaryButton link="allVendors">
                    View More
                 </PrimaryButton>
                 </div>

@@ -6,7 +6,7 @@ import UserProfileCard from "@/components/UserProfileCard";
 import { useState, useEffect } from "react";
 import { Head } from "@inertiajs/react";
 
-export default function Edit({ auth, mustVerifyEmail, status }) {
+export default function Edit({ auth, mustVerifyEmail, status,userwithVaccines }) {
   
     const [RoleId, setRoleId] = useState("");
     const [loading, setLoading] = useState(true);
@@ -70,6 +70,8 @@ export default function Edit({ auth, mustVerifyEmail, status }) {
                                 mustVerifyEmail={mustVerifyEmail}
                                 status={status}
                                 className="max-w-xl"
+                                roleId={RoleId}
+                                userwithVaccines={userwithVaccines}
                             />
                         </div>
                     </div>

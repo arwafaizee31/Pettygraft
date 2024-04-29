@@ -98,9 +98,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/update-user-image/{Id}', [ProfileController::class, 'updateUserImage'])->name('update-user-image');
     Route::delete('/petProfile/{id}', [PetsController::class, 'destroy'])->name('petProfile.destroy');
     Route::put('/update-pet-profile/{petId}', [PetsController::class, 'updatePetProfile'])->name('update-pet-profile');
-  
+    
     Route::post('/customPetAddition/{Id}', [PetsController::class, 'addCustomPet'])->name('customPetAddition.save');
-   
+    Route::get('/vendorDetails/{id}', [UserController::class, 'showVendorDetails'])->name('vendor-details-page');
     Route::get('/allVendors', function () {
         return Inertia::render('AllVendorListing');
     })->name('vendors.show');
