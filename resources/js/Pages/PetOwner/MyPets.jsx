@@ -1,4 +1,5 @@
 import React from "react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import NavBar from "@/components/NavBar";
 import OwnerMyPetsCard from "@/components/OwnerMyPetsCard";
 import { useEffect, useState } from "react";
@@ -22,7 +23,15 @@ export default function MyPets({ auth, link }) {
     }, [auth.user.id]);
     return (
         <>
-            <NavBar></NavBar>
+         <AuthenticatedLayout
+            user={auth.user}
+            header={
+                <h2 className="font-semibold text-lg text-gray-800 leading-tight">
+                    All Vaccines
+                </h2>
+            }
+        >
+            {/* <NavBar></NavBar> */}
             <Head title="My Pets" />
             <div className="text-5xl myPetsHeading">
                 <strong>My Pets </strong>
@@ -55,6 +64,7 @@ export default function MyPets({ auth, link }) {
                     <a href="/petowner/petRegistration">Add more pets</a>
                 </PrimaryButton>
             </div>
+            </AuthenticatedLayout>
         </>
     );
 }

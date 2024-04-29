@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Models\Role;
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Config;
+use App\Models\UserRoles;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Config;
 
 
 
@@ -35,5 +37,19 @@ public function pageTitle()
     // Return the page title as a JSON response
     return response()->json($pageTitle);
 }
-
+public function getUserRole($userId)
+{
+    $role = UserRoles::where('user_id', $userId)->first();
+    return response()->json(['role_id' => $role->role_id]);
+}
+public function getUserId(){
+    if (Auth::check()) {
+        // Get the ID of the currently logged-in user
+        $userId = Auth::id();
+        return $userId;
+    } else {
+        // User is not authenticated, handle the case accordingly
+        return null; // or any other value to indicate the absence of a logged-in user
+    }
+}
 }

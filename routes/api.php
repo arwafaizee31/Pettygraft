@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\PetsController;
-use App\Http\Controllers\ProfileController;
+use App\Models\UserRoles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PetsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VaccineController;
 
 /*
@@ -34,4 +35,4 @@ Route::get('/UsersbyId/{Id}', [ProfileController::class, 'Users']);
 Route::get('/privatePets/{Id}', [PetsController::class, 'privatePets']);
 Route::get('/customPets/{Id}', [PetsController::class, 'customPets']);
 Route::get('/page-title', [UserController::class, 'pageTitle']);
-
+Route::get('/user/{user}/role', [UserController::class, 'getUserRole']);

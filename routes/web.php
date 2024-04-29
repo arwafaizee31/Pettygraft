@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\VaccineController;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\PetsController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\VaccineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,13 +90,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/custompetProfilePage/{id}', [PetsController::class, 'show'])->name('customPetProfilePage');
     
     });
-
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/{Id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/{Id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/update-user-image/{Id}', [ProfileController::class, 'updateUserImage'])->name('update-user-image');
     Route::delete('/petProfile/{id}', [PetsController::class, 'destroy'])->name('petProfile.destroy');
-    Route::put('/update-pet-profile/{petId}', [PetsController::class, 'updatePetProfile'])->name('update-pet-profile');
 });
 
 require __DIR__ . '/auth.php';
