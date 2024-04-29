@@ -92,7 +92,7 @@ export default function NavBar({user}) {
                 });
         }
     }, [user]);
-   
+
     return (
         <div className="fixed w-full  z-50 top-0 shadow-2xl">
             <nav
