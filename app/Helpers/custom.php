@@ -13,3 +13,10 @@ function getBreedDisplayName($breedId)
     }
     return null;
 }
+function calculateAge($dob)
+{
+    $dateOfBirth = new DateTime($dob);
+    $today = new DateTime('today');
+    $age = $dateOfBirth->diff($today)->y;
+    return $age;
+}

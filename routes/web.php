@@ -89,7 +89,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/customPetAddition/{Id}', [PetsController::class, 'addCustomPet'])->name('customPetAddition.save');
         Route::get('/petDetails/{id}', [PetsController::class, 'showPetDetails'])->name('pet-details-page');
         Route::get('/custompetProfilePage/{id}', [PetsController::class, 'show'])->name('customPetProfilePage');
-    
+        Route::get('/sendDateApproachMail', [VaccineController::class, 'vaccineDateApproach'])->name('vaccinesDateApproachMail');
     });
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

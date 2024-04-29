@@ -8,47 +8,47 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use App\Models\EmailTemplate;
-use App\Models\Vaccines;
-use App\Models\User;
+
 class VaccineDateApproachMailByAdmin extends Mailable
 {
     use Queueable, SerializesModels;
-    public $user;
-    public $vaccine;
+    public $mailData;
+
     /**
      * Create a new message instance.
-     *
-     * @return void
      */
-    public function __construct(User $user, ApproachDate $approachDate)
+    public function __construct($mailData)
     {
-        $this->user = $user;
-        $this->approachDate = $approachDate; // Add new property
+        $this->mailData = $mailData;
     }
-    public function build()
+
+    /**
+     * Get the message envelope.
+     */
+    public function envelope(): Envelope
     {
-        $master_template = EmailTemplate::get_master_template();
-        $template = EmailTemplate::get_by_slug('vaccine-date-approach-by-admin');
-        if ($template) {
-            $subject = $template->subject;
-            $body = $template->body;
-            $body = $this->ReplaceEmailValues('body', $body);
-            
-            $final_body = str_replace('[body]', $body, $master_template);
-          
-            return $this->subject($subject)
-                ->html($final_body);
-        }
+        return new Envelope(
+            subject: 'Vaccine Date Approach Mail By Admin',
+        );
     }
-    public function ReplaceEmailValues($type, $html = '')
+
+    /**
+     * Get the message content definition.
+     */
+    public function content(): Content
     {
-        switch ($type) {
-            case 'body':
-                $html = str_replace('[name]', !empty($this->user->fname) ? $this->user->fname : '', $html);
-                $html = str_replace('[approach-date]', !empty($this->vaccine->approachDate) ? $this->vaccine->approachDate : '', $html);
-                break;
-        }
-        return $html;
+        return new Content(
+            view: 'emails.vaccineDateApproachMail',
+        );
+    }
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
     }
 }
