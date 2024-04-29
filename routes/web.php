@@ -96,6 +96,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/update-user-image/{Id}', [ProfileController::class, 'updateUserImage'])->name('update-user-image');
     Route::delete('/petProfile/{id}', [PetsController::class, 'destroy'])->name('petProfile.destroy');
     Route::put('/update-pet-profile/{petId}', [PetsController::class, 'updatePetProfile'])->name('update-pet-profile');
+    Route::get('/vendors', function () {
+        return Inertia::render('VendorCards');
+    })->name('frontend.vendors');
+    
+    
 });
 
 require __DIR__ . '/auth.php';

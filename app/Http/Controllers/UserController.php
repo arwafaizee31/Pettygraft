@@ -35,5 +35,22 @@ public function pageTitle()
     // Return the page title as a JSON response
     return response()->json($pageTitle);
 }
+public function premiumVendors()
+{
+   
+    $vendors = User::whereNull('deleted_at')
+    ->where('is_premium', 1)
+    ->whereHas('roles', function ($query) {
+        $query->where('role_id', 4);
+    })
+    ->inRandomOrder() // Randomize the order of results
+    ->take(3) // Take only 3 records
+    ->get();
+
+
+    
+    return response()->json($vendors);
+}
+
 
 }

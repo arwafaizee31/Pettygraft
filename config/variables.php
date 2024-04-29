@@ -17,9 +17,11 @@ return [
         '/vendor/vaccines' => 'All Vaccines',
         '/vendor/vaccineAddition' => 'Add Vaccine',
         '/vendor/customPetAddition' => 'Add Pet',
-        '/profile' => 'Profile'
+        '/profile' => 'Profile',
+        '/vendors' => 'Vendors'
        
     ],
+
 
 
 ];
