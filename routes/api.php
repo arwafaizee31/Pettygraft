@@ -36,3 +36,6 @@ Route::get('/privatePets/{Id}', [PetsController::class, 'privatePets']);
 Route::get('/customPets/{Id}', [PetsController::class, 'customPets']);
 Route::get('/page-title', [UserController::class, 'pageTitle']);
 Route::get('/user/{user}/role', [UserController::class, 'getUserRole']);
+Route::get('/premiumVendors', [UserController::class, 'premiumVendors']);
+
+

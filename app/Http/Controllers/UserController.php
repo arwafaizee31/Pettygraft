@@ -52,4 +52,22 @@ public function getUserId(){
         return null; // or any other value to indicate the absence of a logged-in user
     }
 }
+public function premiumVendors()
+{
+   
+    $vendors = User::whereNull('deleted_at')
+    ->where('is_premium', 1)
+    ->whereHas('roles', function ($query) {
+        $query->where('role_id', 4);
+    })
+    ->inRandomOrder() // Randomize the order of results
+    ->take(3) // Take only 3 records
+    ->get();
+
+
+    
+    return response()->json($vendors);
+}
+
+
 }

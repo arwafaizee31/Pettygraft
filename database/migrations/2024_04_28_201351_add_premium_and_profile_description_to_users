@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddPremiumAndProfileDescriptionToUsers extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            // Add is_premium field with default value 0
+            $table->boolean('is_premium')->default(0);
+
+            // Add profile_description field with max length 500 characters
+            $table->string('profile_description', 500)->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            // Drop the is_premium and profile_description fields if the migration is rolled back
+            $table->dropColumn('is_premium');
+            $table->dropColumn('profile_description');
+        });
+    }
+}

@@ -18,6 +18,7 @@ export default function CustomPetAddition({
     status,
     className = "",
     user,
+    roleid
 }) {
     const [petTypes, setPetTypes] = useState([]);
     const [selectedPetType, setSelectedPetType] = useState("");

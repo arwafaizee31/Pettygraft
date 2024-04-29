@@ -49,9 +49,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return Inertia::render('PetOwner/Dashboard');
         })->name('petOwner-dashboard');
 
-        Route::get('/petRegistration', function () {
-            return Inertia::render('PetOwner/PetRegistration');
-        })->name('PetRegistration');
+       
+
+        Route::get('/petRegistration', [PetsController::class, 'petRegistration'])->name('PetRegistration');
+       
 
         Route::get('/petProfilePage/{id}', [PetsController::class, 'show'])->name('petOwner-PetProfilePage');
        
@@ -96,6 +97,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile/{Id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/update-user-image/{Id}', [ProfileController::class, 'updateUserImage'])->name('update-user-image');
     Route::delete('/petProfile/{id}', [PetsController::class, 'destroy'])->name('petProfile.destroy');
+    Route::put('/update-pet-profile/{petId}', [PetsController::class, 'updatePetProfile'])->name('update-pet-profile');
+    Route::get('/vendors', function () {
+        return Inertia::render('VendorCards');
+    })->name('frontend.vendors');
+    
+    
 });
 
 require __DIR__ . '/auth.php';

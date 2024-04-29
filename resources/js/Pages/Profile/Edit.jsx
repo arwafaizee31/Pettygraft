@@ -29,7 +29,7 @@ export default function Edit({ auth, mustVerifyEmail, status }) {
     
         fetchUserRole();
     }, [auth.user.id]);
-  console.log(RoleId);
+ 
     useEffect(() => {
         if (!loading) {
             if (RoleId === 4) {
