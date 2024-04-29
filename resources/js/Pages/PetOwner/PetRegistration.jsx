@@ -1,127 +1,42 @@
-import GuestLayout from "@/Layouts/GuestLayout";
-import React, { useEffect, useState } from "react";
-import PrimaryButton from "@/components/PrimaryButton";
-import TextInput from "@/components/TextInput";
-import Heading from "@/components/Heading";
-import { Head, Link, useForm } from "@inertiajs/react";
-import RadioButtonsGroup from "@/components/RadioButton";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import CustomPetAddition from "@/components/CustomPetAddition";
+import UserProfileCard from "@/components/UserProfileCard";
+import { useState, useEffect } from "react";
+import { Head } from "@inertiajs/react";
 
-export default function PetRegistration() {
-    const [genderOptions, setGenderOptions] = useState([]);
-
-    useEffect(() => {
-        fetch("/api/petsGender")
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (
-                    data &&
-                    typeof data === "object" &&
-                    Object.keys(data).length > 0
-                ) {
-                    const options = Object.entries(data).map(
-                        ([key, value]) => ({
-                            value: key,
-                            label: value,
-                        })
-                    );
-                    setGenderOptions(options);
-                } else {
-                    throw new Error("Invalid data format received from server");
-                }
-            })
-            .catch((error) => {
-                console.error("Error fetching gender options:", error);
-            });
-    }, []);
-
-    const [petTypes, setPetTypes] = useState([]);
-    useEffect(() => {
-        fetch("/api/petTypes")
-            .then((response) => response.json())
-            .then((data) => {
-                setPetTypes(data);
-            })
-            .catch((error) => {
-                console.error("Error fetching pet types:", error);
-            });
-    }, []);
-
-    const [petBreeds, setPetBreeds] = useState([]);
-    useEffect(() => {
-        fetch("/api/petBreeds")
-            .then((response) => response.json())
-            .then((data) => {
-                setPetBreeds(data);
-            })
-            .catch((error) => {
-                console.error("Error fetching pet breeds:", error);
-            });
-    }, []);
-
-    const [formData, setFormData] = useState({
-        petName: "",
-        dob: "",
-    });
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-    const { post } = useForm();
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        post("/petRegistration", formData)
-            .then(() => {
-                // Handle success (e.g., redirect)
-            })
-            .catch((error) => {
-                console.error("Error submitting form:", error);
-                // Handle error (e.g., show error message)
-            });
-    };
-
+export default function PetRegistration({ auth, mustVerifyEmail, status , roleId}) {
+  
     return (
-        <GuestLayout>
-            <Heading title="Register your pets!!" />
-            <form onSubmit={handleSubmit}>
-                <div className="max-h-[800px] overflow-y-auto">
-                    <div>
-                        <TextInput
-                            placeholder="pet name"
-                            id="petName"
-                            name="petName"
-                            // value={data.petName}
-                            // onChange={handleInputChange}
-                        />
+        <AuthenticatedLayout
+            user={auth.user}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                   Add Pet
+                </h2>
+            }
+        >
+            <Head title="Add Pet" />
+
+            <div className="py-12">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+                    <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg grid lg:grid-cols-5 sm:grid-cols-1 gap-2">
+                       
+                        <div class="lg:col-span-5">
+                            <CustomPetAddition
+                                mustVerifyEmail={mustVerifyEmail}
+                                status={status}
+                                className="max-w-xl"
+                                user={auth.user}
+                                roleid = {roleId}
+                            />
+                        </div>
                     </div>
-                    <div className="mt-4">
-                        <TextInput
-                            id="dob"
-                            name="dob"
-                            type="date"
-                            placeholder="date of birth"
-                            // value={data.dob}
-                            // onChange={handleInputChange}
-                        />
-                    </div>
-                    <RadioButtonsGroup
-                        name="gender"
-                        options={genderOptions}
-                    ></RadioButtonsGroup>
+
+                 
+
+                   
                 </div>
-                <div className="flex  gap-3 justify-start mt-4">
-                    <PrimaryButton type="submit">Save Pet</PrimaryButton>
-                </div>
-            </form>
-        </GuestLayout>
+            </div>
+        </AuthenticatedLayout>
     );
 }

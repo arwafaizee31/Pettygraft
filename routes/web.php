@@ -48,9 +48,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return Inertia::render('PetOwner/Dashboard');
         })->name('petOwner-dashboard');
 
-        Route::get('/petRegistration', function () {
-            return Inertia::render('PetOwner/PetRegistration');
-        })->name('PetRegistration');
+       
+
+        Route::get('/petRegistration', [PetsController::class, 'petRegistration'])->name('PetRegistration');
+       
 
         Route::get('/petProfilePage/{id}', [PetsController::class, 'show'])->name('petOwner-PetProfilePage');
        

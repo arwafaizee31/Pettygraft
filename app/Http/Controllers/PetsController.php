@@ -291,4 +291,15 @@ class PetsController extends Controller
         $pet->breed_display_name = $breedDisplayName;
         return Inertia::render('Vendor/PetDetails', ['pet' => $pet]);
     }
+    public function petRegistration()
+    {
+        // Fetch the pet details by ID
+        $user = Auth::user();
+        $roleId = $user->roles()->first()->id;
+          
+            return Inertia::render('PetOwner/PetRegistration', [
+                'roleId' => $roleId,
+            ]);
+     
+    }
 }
