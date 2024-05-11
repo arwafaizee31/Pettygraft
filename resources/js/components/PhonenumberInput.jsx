@@ -6,7 +6,7 @@ export default forwardRef(function PhonenumberInput({ type = 'text', className =
     const [selectedCountryCode, setSelectedCountryCode] = useState(null);
     useEffect(() => {
         if (!selectedCountryCode) {
-            console.log(defaultCountry.value);
+          
             setData('country_code', defaultCountry.value);
             setSelectedCountryCode(defaultCountry.value);
         }
