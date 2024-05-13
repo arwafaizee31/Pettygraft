@@ -33,9 +33,9 @@ export default function Edit({ auth, mustVerifyEmail, status,userwithVaccines })
     useEffect(() => {
         if (!loading) {
             if (RoleId === 4) {
-                setRouteUrl("/vendor");
+                setRouteUrl("/vendor/dashboard");
             } else {
-                setRouteUrl("/petowner");
+                setRouteUrl("/petowner/myPets");
             }
         }
     }, [RoleId, loading]);
@@ -60,7 +60,7 @@ export default function Edit({ auth, mustVerifyEmail, status,userwithVaccines })
                                 updateImageRoute={`/update-user-image/${auth.user.id}`}
                                 name={auth.user.fname + " " + auth.user.lname}
                                 // link={`${routeUrl}/dashboard`}
-                                linkDashboard={`${routeUrl}/dashboard`}
+                                linkDashboard={`${routeUrl}/`}
                                 linkLogout={`logout`}
                                 roleId={RoleId}
                             />

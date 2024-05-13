@@ -44,7 +44,7 @@ class RegisteredUserController extends Controller
             'country' => 'required|string|max:255',
             'state' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
-            'roles' => 'required|array'
+            'roles' => 'required'
          ]);
        
          
@@ -64,7 +64,7 @@ class RegisteredUserController extends Controller
         event(new Registered($user));   
 
         Auth::login($user);
-        // $user->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
         return redirect()->route('verification.noticeCustom');
     }
 }

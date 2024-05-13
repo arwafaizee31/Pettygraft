@@ -40,7 +40,7 @@ export default function AllVendorListing({auth}) {
     };
 
     const Fields = ['Name', 'Email',  'Contact no.', 'Location','Action'];
-    const DataFields = ['pet_name', 'email', 'pet_contact', 'pet_location','Action','id'];
+    const DataFields = ['pet_name', 'email', 'pet_contact', 'pet_location','Action'];
     const formatData = (Data,DataFields) => {   
        
 
@@ -64,7 +64,7 @@ export default function AllVendorListing({auth}) {
             formattedPet['avatar'] = data.avatar;
             formattedPet['is_premium'] = data.is_premium;
             formattedPet['vaccineIds'] = data.vaccines.map(vaccine => vaccine.id);
-
+            formattedPet['id'] = data.id;
          
             return formattedPet;
         });

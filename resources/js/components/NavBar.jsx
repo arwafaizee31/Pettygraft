@@ -109,24 +109,24 @@ export default function NavBar({user}) {
                         <div className="flex">
                             <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
-                                    href={route("vendor-dashboard")}
-                                    active={route().current("vendor-dashboard")}
+                                    href={route("myPets")}
+                                    active={route().current("myPets")}
                                 >
                                     HOME
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
-                                    href={route("vendor-dashboard")}
-                                    active={route().current("vendor-dashboard")}
+                                    href={route("myPets")}
+                                    active={route().current("myPets")}
                                 >
                                     MY PETS
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
-                                    href={route("vendor-dashboard")}
-                                    active={route().current("vendor-dashboard")}
+                                    href={route("vendors.show")}
+                                    active={route().current("vendors.show")}
                                 >
                                     ALL VENDORS
                                 </NavLink>
@@ -142,16 +142,16 @@ export default function NavBar({user}) {
                         <div className="flex">
                             <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
-                                    href={route("vendor-dashboard")}
-                                    active={route().current("vendor-dashboard")}
+                                    href={route("myPets")}
+                                    active={route().current("myPets")}
                                 >
                                     ABOUT
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 <NavLink
-                                    href={route("vendor-dashboard")}
-                                    active={route().current("vendor-dashboard")}
+                                    href={route("PetRegistration")}
+                                    active={route().current("PetRegistration")}
                                 >
                                     ADD PETS
                                 </NavLink>

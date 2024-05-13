@@ -52,7 +52,7 @@ public function store(LoginRequest $request): RedirectResponse
             return redirect()->route('admin-dashboard');
             break;
         case 3: // User role
-            return redirect()->route('petOwner-dashboard');
+            return redirect()->route('myPets');
             break;
         case 4: // User role
             return redirect()->route('vendor-dashboard');

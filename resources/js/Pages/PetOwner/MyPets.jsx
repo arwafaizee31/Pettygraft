@@ -53,7 +53,7 @@ export default function MyPets({ auth, link }) {
                                         : ""
                                 }`}
                             >
-                                <OwnerMyPetsCard key={pet.id} pet={pet} />
+                                <OwnerMyPetsCard key={pet.id} pet={pet} profile={`petProfilePage/${pet.id}`}/>
                             </div>
                         ))}
                     </div>

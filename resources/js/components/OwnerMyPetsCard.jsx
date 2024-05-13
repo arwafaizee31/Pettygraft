@@ -1,5 +1,5 @@
 
-export default function OwnerMyPetsCard({ pet }) {
+export default function OwnerMyPetsCard({ pet,profile }) {
   return (
     <div className="col-my-pets-owner" onTouchStart="this.classList.toggle('hover');">
       <div className="container-my-pets-owner-card">
@@ -16,9 +16,15 @@ export default function OwnerMyPetsCard({ pet }) {
         <div className="back">
           <div className="inner">
             <p className="isPrivateStatus">{pet.is_private}</p>
-            <a href="https://www.cult.fit/" target="_blank">
+
+            <a href={profile} target="_blank">
               <button type="button" className="btn btn-outline-dark rounded-0 petProfileLink">
                 {pet.permanent_vendor_id}
+              </button>
+            </a>
+            <a href={profile} target="_blank">
+              <button type="button" className="btn btn-outline-dark rounded-0 petProfileLink">
+                Profile
               </button>
             </a>
           </div>

@@ -9,7 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VaccineController;
 
-/*
+/*  
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -22,26 +22,18 @@ use App\Http\Controllers\VaccineController;
 
 Auth::routes(['verify' => true]);
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
-
-
+    return Inertia::render('Auth/Register');
+})->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::group(['middleware' => ['admin', 'verified'], 'prefix' => 'admin'], function () {
 
         // Define routes accessible only by Admin
-        Route::get('/dashboard', function () {
-            return Inertia::render('Admin/Dashboard');
+        Route::get('/dashboard', function () {  
+            return Inertia::render('Admin/Dashboard');  
         })->name('admin-dashboard');
-    });
+    }); 
     Route::group(['middleware' => ['petowner', 'verified'], 'prefix' => 'petowner'], function () {
 
         // Define routes accessible only by Pet Owner
@@ -49,19 +41,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return Inertia::render('PetOwner/Dashboard');
         })->name('petOwner-dashboard');
 
-       
+
 
         Route::get('/petRegistration', [PetsController::class, 'petRegistration'])->name('PetRegistration');
-       
+
 
         Route::get('/petProfilePage/{id}', [PetsController::class, 'show'])->name('petOwner-PetProfilePage');
-       
+            
         Route::put('/privateVendor/{petId}/update', [PetsController::class, 'privateVendorUpdate'])->name('privateVendor.update');
         Route::post('/update-pet-image/{petId}', [PetsController::class, 'updatePetImage'])->name('update-pet-image');
        
-        Route::get('/myPets', function () {
-            return Inertia::render('PetOwner/MyPets');
-        })->name('my-pets.owner');
+        Route::get('/myPets', [PetsController::class, 'myPets'])->name('myPets');
         Route::get('/ownerMyPets', [PetsController::class, 'ownerMyPets'])->name('ownerMyPets');
     });
     Route::group(['middleware' => ['vendor', 'verified'], 'prefix' => 'vendor'], function () {

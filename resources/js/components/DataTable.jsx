@@ -49,6 +49,7 @@ export default function DataTable({
     title,
     viewlink,
     enableFilter,
+    user
 }) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);

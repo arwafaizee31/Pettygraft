@@ -79,7 +79,7 @@ class PetsController extends Controller
         } else {
             $pet = Pets::findOrFail($id);
             $pet->delete();
-            return Redirect::to('/petowner/dashboard')->with('Pet deleted successfully');
+            return Redirect::to('/petowner/myPets')->with('Pet deleted successfully');
         }
     }
     public function privateVendorUpdate(Request $request, $petId): RedirectResponse
@@ -236,7 +236,7 @@ class PetsController extends Controller
                 'type_id' => 'required',
                 'breed' => 'required',
                 'gender' => 'required',
-                'vaccine_ids' => 'array',
+                'vaccine_ids' => 'array|required',
                 'owner_name' => 'required',
                 'owner_email' => 'required|string|email|max:255', // removed lowercase
                 'country_code' => 'required|string|max:255',
@@ -254,7 +254,7 @@ class PetsController extends Controller
                 'type_id' => 'required',
                 'breed' => 'required',
                 'gender' => 'required',
-                'vaccine_ids' => 'array',
+                'vaccine_ids' => 'array|required',
             ]);
         }
        
@@ -336,4 +336,21 @@ class PetsController extends Controller
         ]);
      
     }
+    public function myPets()
+    {
+        // Fetch the pet details by ID
+        $user = Auth::user();
+        $roleId = $user->roles()->first()->id;
+       if (count($user->pets) === 0) {
+        return Inertia::render('PetOwner/PetRegistration',[
+            'roleId' => $roleId
+        ]);
+    } else {
+        return Inertia::render('PetOwner/MyPets');
+      
+    }
+    
+       
+    }
+    
 }
